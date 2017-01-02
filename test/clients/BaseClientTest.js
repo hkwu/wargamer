@@ -135,7 +135,7 @@ describe('BaseClient', function() {
       it('overrides default client options as needed', function() {
         const accountListSearchRu = client.fetch('account/list', { search: 'Straik' }, { realm: 'ru' });
 
-        return expect(accountListSearchRu.then(response => response.realm)).to.eventually.equal('ru');
+        return expect(accountListSearchRu.then(response => response.requestRealm)).to.eventually.equal('ru');
       });
 
       it('trims slashes as needed', function() {
