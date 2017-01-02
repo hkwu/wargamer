@@ -195,6 +195,7 @@ export default class BaseClient {
       if (error) {
         // Wargaming API error
         throw new APIError({
+          client: this,
           statusCode: response.status,
           url: response.request.url,
           method: normalizedMethod,
@@ -203,8 +204,8 @@ export default class BaseClient {
       }
 
       return new APIResponse({
-        type: this.type,
-        realm: normalizedRealm,
+        client: this,
+        requestRealm: normalizedRealm,
         url: response.request.url,
         method: normalizedMethod,
         response: response.body,
@@ -221,6 +222,7 @@ export default class BaseClient {
 
       throw new RequestError({
         message: value.response.error.message,
+        client: this,
         statusCode: error.status,
         url: req.url,
       });

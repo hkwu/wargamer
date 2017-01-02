@@ -5,25 +5,27 @@ export default class APIResponse {
   /**
    * Constructor.
    * @param {Object} data - The response data.
-   * @param {string} data.type - The type of the request this response corresponds to.
-   * @param {string} data.realm - The realm of the request this response corresponds to.
+   * @param {BaseClient} data.client - The API client that the response originated
+   *   from.
+   * @param {string} data.requestRealm - The realm of the API that this response
+   *   originated from.
    * @param {string} data.url - The URL of the request this response corresponds to.
    * @param {string} data.method - The name of the method that was used to get
    *   this response data.
    * @param {Object} data.response - The parsed JSON data from the API.
    */
-  constructor({ type, realm, url, method, response }) {
+  constructor({ client, requestRealm, url, method, response }) {
     /**
-     * The type of the API that this response came from.
-     * @type {string}
+     * The API client that the response originated from.
+     * @type {BaseClient}
      */
-    this.type = type;
+    this.client = client;
 
     /**
-     * The realm of the request this response corresponds to.
+     * The realm of the API that this response originated from.
      * @type {string}
      */
-    this.realm = realm;
+    this.requestRealm = requestRealm;
 
     /**
      * The URL of the request this response corresponds to.
