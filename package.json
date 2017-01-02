@@ -1,0 +1,55 @@
+{
+  "name": "wargamer",
+  "version": "0.1.0",
+  "description": "Node client library for the Wargaming.net API.",
+  "keywords": [
+    "client library",
+    "api",
+    "rest",
+    "wargaming",
+    "world of tanks",
+    "world of warships",
+    "world of warplanes",
+    "wot",
+    "wowp",
+    "wows"
+  ],
+  "homepage": "https://github.com/hkwu/wargamer#readme",
+  "bugs": {
+    "url": "https://github.com/hkwu/wargamer/issues"
+  },
+  "license": "MIT",
+  "author": "Kelvin Wu <kelvinwu1996@gmail.com>",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hkwu/wargamer.git"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "watch": "babel --watch src --out-dir lib",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "mocha --require babel-register --recursive",
+    "prepublish": "npm run build && yarn test"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.20.0",
+    "es6-error": "^4.0.0",
+    "superagent": "^3.3.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
+    "babel-preset-env": "^1.1.4",
+    "babel-register": "^6.18.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.1.1",
+    "eslint-config-airbnb-base": "^11.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "mocha": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=4"
+  }
+}
