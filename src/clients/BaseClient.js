@@ -57,7 +57,7 @@ const BASE_URI = {
  * @returns {string} The base URI for the API that was specified.
  * @throws {Error} Thrown if the given `realm` or `type` don't exist.
  */
-export const getBaseUri = (realm, type) => {
+const getBaseUri = (realm, type) => {
   if (!REALM_TLD[realm] || !BASE_URI[type]) {
     throw new Error();
   }
@@ -82,13 +82,16 @@ export default class BaseClient {
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor({ type, realm, applicationId, accessToken = null, requestMethod = 'POST' }) {
-    if (!realm) {
-      throw new TypeError('Must specify a realm for the client.');
-    } else if (!applicationId) {
+    if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
+      throw new TypeError('Must specify a valid realm for the client.');
+    } else if (typeof applicationId !== 'string') {
       throw new TypeError('Must specify an application ID for the client.');
     } else if (!BaseClient.isValidRequestMethod(requestMethod)) {
       throw new TypeError('Must specify a valid request method.');
     }
+
+    const normalizedRealm = realm.toLowerCase();
+    const normalizedRequestMethod = requestMethod.toUpperCase();
 
     /**
      * The type of API this client is for.
@@ -102,7 +105,7 @@ export default class BaseClient {
      * @type {string}
      * @private
      */
-    this.realm = realm;
+    this.realm = normalizedRealm;
 
     /**
      * The application ID for this client.
@@ -123,14 +126,14 @@ export default class BaseClient {
      * @type {string}
      * @private
      */
-    this.requestMethod = requestMethod;
+    this.requestMethod = normalizedRequestMethod;
 
     /**
      * The base API URI for this client.
      * @type {string}
      * @private
      */
-    this.baseUri = getBaseUri(realm, type);
+    this.baseUri = getBaseUri(normalizedRealm, type);
   }
 
   /**
@@ -164,11 +167,13 @@ export default class BaseClient {
     }
 
     const normalizedMethod = method.toLowerCase();
+    const normalizedRequestMethod = requestMethod.toUpperCase();
+
     const requestUrl = `${this.baseUri}/${normalizedMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
     const data = { application_id: this.applicationId, ...params };
     const payload = this.accessToken ? { access_token: this.accessToken, ...data } : data;
 
-    const success = (response) => {
+    const fulfill = (response) => {
       const { error = null } = response.body;
 
       if (error) {
@@ -188,7 +193,7 @@ export default class BaseClient {
       });
     };
 
-    const failure = (value) => {
+    const reject = (value) => {
       // check if this is a HTTP error or a Wargaming error
       if (value instanceof APIError) {
         throw value;
@@ -203,18 +208,18 @@ export default class BaseClient {
       });
     };
 
-    switch (requestMethod) {
+    switch (normalizedRequestMethod) {
       case 'GET':
         return request.get(requestUrl)
           .query(payload)
-          .then(success)
-          .catch(failure);
+          .then(fulfill)
+          .catch(reject);
       case 'POST':
         return request.post(requestUrl)
           .type('form')
           .send(payload)
-          .then(success)
-          .catch(failure);
+          .then(fulfill)
+          .catch(reject);
       default:
         // we should never get here anyways
         return Promise.reject(new Error('Received invalid request method.'));
