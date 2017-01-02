@@ -37,6 +37,12 @@ export default class APIError extends RequestError {
     this.code = code;
 
     /**
+     * The message corresponding to the error code.
+     * @type {string}
+     */
+    this.apiMessage = message;
+
+    /**
      * The field which was flagged in the error.
      * @type {string}
      */

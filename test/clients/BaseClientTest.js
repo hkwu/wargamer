@@ -156,7 +156,7 @@ describe('BaseClient', function() {
       });
 
       it('rejects with an INVALID_APPLICATION_ID error', function() {
-        return expect(accountListSearchBadApplicationId.then(error => error.errorMessage)).to.eventually.equal('INVALID_APPLICATION_ID');
+        return expect(accountListSearchBadApplicationId.then(error => error.apiMessage)).to.eventually.equal('INVALID_APPLICATION_ID');
       });
 
       it('rejects and logs the correct API method used', function() {
