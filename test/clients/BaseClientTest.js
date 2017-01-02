@@ -117,7 +117,7 @@ describe('BaseClient', function() {
         return expect(accountListSearchGet).to.eventually.be.instanceof(APIResponse);
       });
 
-      it('overrides default client options as needed', function() {
+      it('overrides request parameters as needed', function() {
         const badClient = new BaseClient({
           type: 'wot',
           realm: 'na',
@@ -130,6 +130,12 @@ describe('BaseClient', function() {
         });
 
         return expect(overriden).to.eventually.be.instanceof(APIResponse);
+      });
+
+      it('overrides default client options as needed', function() {
+        const accountListSearchRu = client.fetch('account/list', { search: 'Straik' }, { realm: 'ru' });
+
+        return expect(accountListSearchRu.then(response => response.realm)).to.eventually.equal('ru');
       });
 
       it('trims slashes as needed', function() {

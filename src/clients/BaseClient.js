@@ -15,6 +15,13 @@ import RequestError from '../errors/RequestError';
  */
 
 /**
+ * The options available to use when making a single request.
+ * @typedef {Object} RequestOptions
+ * @property {string} [realm] - The realm/region to use for the request.
+ * @property {string} [requestMethod] - The method to use for the request.
+ */
+
+/**
  * Valid request methods for the Wargaming API.
  * @type {Set.<string>}
  * @constant
@@ -155,11 +162,13 @@ export default class BaseClient {
    * Fetches data from an endpoint method.
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
-   * @param {string} [requestMethod] - The request method to use.
+   * @param {RequestOptions} [options={}] - Options used to override client defaults.
    * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
    *   API data, or rejecting with an error.
    */
-  fetch(method, params = {}, requestMethod = this.requestMethod) {
+  fetch(method, params = {}, options = {}) {
+    const { realm = this.realm, requestMethod = this.requestMethod } = options;
+
     if (typeof method !== 'string') {
       throw new TypeError('Expected method to be a string.');
     } else if (!BaseClient.isValidRequestMethod(requestMethod)) {
@@ -168,10 +177,17 @@ export default class BaseClient {
 
     const normalizedMethod = method.toLowerCase();
     const normalizedRequestMethod = requestMethod.toUpperCase();
+    const normalizedRealm = realm.toLowerCase();
 
-    const requestUrl = `${this.baseUri}/${normalizedMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
-    const data = { application_id: this.applicationId, ...params };
-    const payload = this.accessToken ? { access_token: this.accessToken, ...data } : data;
+    const baseUrl = normalizedRealm === this.realm
+      ? this.baseUri
+      : getBaseUri(normalizedRealm, this.type);
+    const requestUrl = `${baseUrl}/${normalizedMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
+    const payload = {
+      application_id: this.applicationId,
+      access_token: this.accessToken,
+      ...params,
+    };
 
     const fulfill = (response) => {
       const { error = null } = response.body;
@@ -187,9 +203,11 @@ export default class BaseClient {
       }
 
       return new APIResponse({
-        response: response.body,
+        type: this.type,
+        realm: normalizedRealm,
         url: response.request.url,
         method: normalizedMethod,
+        response: response.body,
       });
     };
 
