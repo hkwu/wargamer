@@ -39,6 +39,9 @@ jspm_packages
 # Transpiled files
 lib/
 
+# Documentation
+_gh_pages/
+
 # Misc
 .idea/
 .env

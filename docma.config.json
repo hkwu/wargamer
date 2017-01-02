@@ -1,0 +1,19 @@
+{
+  "src": [
+    "src/**/*.js",
+    "README.md"
+  ],
+  "dest": "_gh_pages",
+  "jsdoc": {
+    "package": "package.json"
+  },
+  "app": {
+    "title": "Wargamer Documentation",
+    "entrance": "content:readme",
+    "routing": {
+      "method": "path",
+      "caseSensitive": false
+    },
+    "server": "github"
+  }
+}
