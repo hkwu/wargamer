@@ -22,5 +22,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unit tests and continuous integration.
 - Documentation build process.
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.1...HEAD
-[0.1.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...v0.1.1
+[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/hkwu/wargamer/compare/v0.1.0...v0.1.1
