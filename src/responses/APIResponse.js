@@ -1,7 +1,7 @@
 /**
  * @classdesc Wraps a response from the Wargaming API.
  */
-export default class APIResponse {
+class APIResponse {
   /**
    * Constructor.
    * @param {Object} data - The response data.
@@ -62,3 +62,5 @@ export default class APIResponse {
     return this.response.data;
   }
 }
+
+export default APIResponse;

@@ -4,7 +4,7 @@ import ExtendableError from 'es6-error';
  * @classdesc Generic API client error encountered during requests.
  * @extends ExtendableError
  */
-export default class RequestError extends ExtendableError {
+class RequestError extends ExtendableError {
   /**
    * Constructor.
    * @param {Object} options - The constructor options.
@@ -36,3 +36,5 @@ export default class RequestError extends ExtendableError {
     this.url = url;
   }
 }
+
+export default RequestError;

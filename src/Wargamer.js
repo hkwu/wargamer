@@ -8,7 +8,7 @@ import Wargaming from './clients/Wargaming';
 /**
  * @classdesc The Wargamer client.
  */
-export default class Wargamer {
+class Wargamer {
   /**
    * Constructs a new World of Tanks API client.
    * @param {ClientOptions} options - The client options.
@@ -69,3 +69,5 @@ export default class Wargamer {
     return new Wargaming(options);
   }
 }
+
+export default Wargamer;

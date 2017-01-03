@@ -7,13 +7,14 @@ import RequestError from './RequestError';
  * @property {string} message - The wargaming API error message.
  * @property {string} field - The Wargaming API error field.
  * @property {*} value - The Wargaming API error field value.
+ * @private
  */
 
 /**
  * @classdesc Error received from Wargaming's API.
  * @extends RequestError
  */
-export default class APIError extends RequestError {
+class APIError extends RequestError {
   /**
    * Constructor.
    * @param {Object} options - The constructor options.
@@ -72,3 +73,5 @@ export default class APIError extends RequestError {
     this.value = value;
   }
 }
+
+export default APIError;
