@@ -5,13 +5,11 @@
     "README.md",
     "docs/*.md"
   ],
-  "dest": "_gh_pages",
   "jsdoc": {
     "undocumented": false
   },
   "app": {
     "title": "Wargamer",
-    "base": "/wargamer",
     "entrance": "content:readme",
     "routing": {
       "method": "query",
