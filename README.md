@@ -5,14 +5,14 @@
 
 A promise-based Node.js client library for the Wargaming.net API. Supports all of the documented APIs listed in the [API reference](https://developers.wargaming.net/reference/).
 
-* World of Tanks
-* World of Tanks Blitz
-* World of Tanks Console
-* World of Warships
-* World of Warplanes
-* Wargaming.net
+- World of Tanks
+- World of Tanks Blitz
+- World of Tanks Console
+- World of Warships
+- World of Warplanes
+- Wargaming.net
 
-The library currently supports Node v4+.
+The library currently supports Node.js 4.0.0 and above.
 
 ## Installation
 ```bash
@@ -43,7 +43,7 @@ tanks.fetch('account/list', { search: 'Straik' })
 ```
 
 ## References
-* [Wargamer Documentation](https://hkwu.github.io/wargamer)
-* [Wargaming.net Developer's Room](https://developers.wargaming.net/)
-* [Wargaming.net API Documentation](https://developers.wargaming.net/documentation/)
-* [Wargaming.net API Reference and Interactive Console](https://developers.wargaming.net/reference/)
+- [Wargamer Documentation](https://hkwu.github.io/wargamer)
+- [Wargaming.net Developer's Room](https://developers.wargaming.net/)
+- [Wargaming.net API Documentation](https://developers.wargaming.net/documentation/)
+- [Wargaming.net API Reference and Interactive Console](https://developers.wargaming.net/reference/)

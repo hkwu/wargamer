@@ -46,8 +46,8 @@ On a successful request, the return value of `fetch()` will resolve to an [APIRe
 
 On error, the promise will reject. However, the value that the promise rejects with will differ depending on if there was an error with the request itself or if the Wargaming API rejected the request (although the request was correctly received).
 
-* If the request did not reach the API correctly, the promise rejects with a [RequestError](?api#RequestError).
-* If the request reached the API and was then rejected, the promise rejects with an [APIError](?api#APIError).
+- If the request did not reach the API correctly, the promise rejects with a [RequestError](?api#RequestError).
+- If the request reached the API and was then rejected, the promise rejects with an [APIError](?api#APIError).
 
 ### Sending Parameters
 The second parameter in `fetch()` is the parameter payload to send to the API method. Keys in the parameters object will be merged automatically with the client's application ID on each request, so you don't need to specify it each time. Similarly, the client's access token (if one was provided) will also be merged in.
@@ -56,5 +56,5 @@ The second parameter in `fetch()` is the parameter payload to send to the API me
 
 Some API method parameter values require special formatting. In order to make it more convenient to work with these parameters, Wargamer automatically converts the following values:
 
-* `Array` => `string` (elements joined into comma-delimited string).
-* `Date` => `string` (converted to ISO 8601 string).
+- `Array` => `string` (elements joined into comma-delimited string).
+- `Date` => `string` (converted to ISO 8601 string).
