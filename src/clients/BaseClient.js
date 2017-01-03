@@ -2,6 +2,7 @@ import request from 'superagent';
 import APIError from '../errors/APIError';
 import APIResponse from '../responses/APIResponse';
 import RequestError from '../errors/RequestError';
+import mapValues from '../utils/mapValues';
 
 /**
  * The options available to use on a client constructor.
@@ -163,6 +164,23 @@ class BaseClient {
   }
 
   /**
+   * Normalizes a given parameter type so the API can consume it.
+   * @param {*} parameter - The parameter to normalize.
+   * @returns {*} The normalized parameter.
+   * @static
+   * @private
+   */
+  static normalizeParameterValue(parameter) {
+    if (Array.isArray(parameter)) {
+      return parameter.join(',');
+    } else if (parameter instanceof Date) {
+      return parameter.toISOString();
+    }
+
+    return parameter;
+  }
+
+  /**
    * Fetches data from an endpoint method.
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
@@ -184,15 +202,20 @@ class BaseClient {
     const normalizedRequestMethod = requestMethod.toUpperCase();
     const normalizedRealm = realm.toLowerCase();
 
+    // construct the request URL
     const baseUrl = normalizedRealm === this.realm
       ? this.baseUri
       : getBaseUri(normalizedRealm, this.type);
     const requestUrl = `${baseUrl}/${normalizedMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
+
+    // construct the payload
     const payload = {
       application_id: this.applicationId,
       access_token: this.accessToken,
       ...params,
     };
+
+    const normalizedPayload = mapValues(payload, this.constructor.normalizeParameterValue);
 
     const fulfill = (response) => {
       const { error = null } = response.body;
@@ -236,13 +259,13 @@ class BaseClient {
     switch (normalizedRequestMethod) {
       case 'GET':
         return request.get(requestUrl)
-          .query(payload)
+          .query(normalizedPayload)
           .then(fulfill)
           .catch(reject);
       case 'POST':
         return request.post(requestUrl)
           .type('form')
-          .send(payload)
+          .send(normalizedPayload)
           .then(fulfill)
           .catch(reject);
       default:
