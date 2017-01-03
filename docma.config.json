@@ -1,19 +1,54 @@
 {
   "src": [
     "src/**/*.js",
-    "README.md"
+    "!src/index.js",
+    "README.md",
+    "docs/*.md"
   ],
   "dest": "_gh_pages",
   "jsdoc": {
-    "package": "package.json"
+    "undocumented": false
   },
   "app": {
-    "title": "Wargamer Documentation",
+    "title": "Wargamer",
+    "base": "/wargamer",
     "entrance": "content:readme",
     "routing": {
-      "method": "path",
+      "method": "query",
       "caseSensitive": false
     },
     "server": "github"
+  },
+  "template": {
+    "options": {
+      "title": "Wargamer",
+      "navItems": [
+        {
+          "label": "Home",
+          "href": "./"
+        },
+        {
+          "label": "Documentation",
+          "href": "?api",
+          "iconClass": "ico-md ico-code"
+        },
+        {
+          "label": "Guides",
+          "iconClass": "ico-md ico-book",
+          "items": [
+            {
+              "label": "Introduction",
+              "href": "?content=introduction"
+            }
+          ]
+        },
+        {
+          "label": "GitHub",
+          "href": "https://github.com/hkwu/wargamer",
+          "target": "_blank",
+          "iconClass": "ico-md ico-github"
+        }
+      ]
+    }
   }
 }
