@@ -25,13 +25,30 @@ import RequestError from '../errors/RequestError';
  * Valid request methods for the Wargaming API.
  * @type {Set.<string>}
  * @constant
+ * @private
  */
 const VALID_REQUEST_METHODS = new Set(['GET', 'POST']);
+
+/**
+ * Checks if a request method is valid.
+ * @param {string} method - The request method.
+ * @returns {boolean} True if the method is valid.
+ * @throws {TypeError} Thrown if the given request method is not a string.
+ * @private
+ */
+const isValidRequestMethod = (method) => {
+  if (typeof method !== 'string') {
+    throw new TypeError('Given request method must be a string.');
+  }
+
+  return VALID_REQUEST_METHODS.has(method.toUpperCase());
+};
 
 /**
  * Mapping between realms and their TLDs.
  * @type {Object}
  * @constant
+ * @private
  */
 const REALM_TLD = {
   ru: 'ru',
@@ -47,6 +64,7 @@ const REALM_TLD = {
  * Functions which generate the base URIs for various APIs.
  * @type {Object}
  * @constant
+ * @private
  */
 const BASE_URI = {
   wot: realm => `https://api.worldoftanks.${REALM_TLD[realm]}/wot`,
@@ -63,6 +81,7 @@ const BASE_URI = {
  * @param {string} type - The desired API.
  * @returns {string} The base URI for the API that was specified.
  * @throws {Error} Thrown if the given `realm` or `type` don't exist.
+ * @private
  */
 const getBaseUri = (realm, type) => {
   if (!REALM_TLD[realm] || !BASE_URI[type]) {
@@ -75,7 +94,7 @@ const getBaseUri = (realm, type) => {
 /**
  * @classdesc The base API client.
  */
-export default class BaseClient {
+class BaseClient {
   /**
    * Constructor.
    * @param {Object} options - The client options.
@@ -93,7 +112,7 @@ export default class BaseClient {
       throw new TypeError('Must specify a valid realm for the client.');
     } else if (typeof applicationId !== 'string') {
       throw new TypeError('Must specify an application ID for the client.');
-    } else if (!BaseClient.isValidRequestMethod(requestMethod)) {
+    } else if (!isValidRequestMethod(requestMethod)) {
       throw new TypeError('Must specify a valid request method.');
     }
 
@@ -144,34 +163,20 @@ export default class BaseClient {
   }
 
   /**
-   * Checks if a request method is available for the client.
-   * @param {string} method - The request method.
-   * @returns {boolean} True if the method is valid for the client.
-   * @throws {TypeError} Thrown if the given request method is not a string.
-   * @static
-   */
-  static isValidRequestMethod(method) {
-    if (typeof method !== 'string') {
-      throw new TypeError('Given request method must be a string.');
-    }
-
-    return VALID_REQUEST_METHODS.has(method.toUpperCase());
-  }
-
-  /**
    * Fetches data from an endpoint method.
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
    * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
    *   API data, or rejecting with an error.
+   * @throws {TypeError} Thrown if any parameters are not the right type.
    */
   fetch(method, params = {}, options = {}) {
     const { realm = this.realm, requestMethod = this.requestMethod } = options;
 
     if (typeof method !== 'string') {
       throw new TypeError('Expected method to be a string.');
-    } else if (!BaseClient.isValidRequestMethod(requestMethod)) {
+    } else if (!isValidRequestMethod(requestMethod)) {
       throw new TypeError('Must specify a valid request method.');
     }
 
@@ -246,3 +251,5 @@ export default class BaseClient {
     }
   }
 }
+
+export default BaseClient;
