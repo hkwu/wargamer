@@ -26,7 +26,7 @@ yarn add wargamer
 ```
 
 ## Usage
-Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://hkwu.github.io/wargamer).
+Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://wargamer.js.org/).
 
 ```js
 import Wargamer from 'wargamer';
@@ -43,7 +43,7 @@ tanks.fetch('account/list', { search: 'Straik' })
 ```
 
 ## References
-- [Wargamer Documentation](https://hkwu.github.io/wargamer)
+- [Wargamer Documentation](https://wargamer.js.org/)
 - [Wargaming.net Developer's Room](https://developers.wargaming.net/)
 - [Wargaming.net API Documentation](https://developers.wargaming.net/documentation/)
 - [Wargaming.net API Reference and Interactive Console](https://developers.wargaming.net/reference/)
