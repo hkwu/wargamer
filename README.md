@@ -1,4 +1,8 @@
-# wargamer
+# Wargamer
+[![npm](https://img.shields.io/npm/v/wargamer.svg?style=flat-square)](https://www.npmjs.com/package/wargamer)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg?style=flat-square)](https://travis-ci.org/hkwu/wargamer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
 A promise-based Node.js client library for the Wargaming.net API. Supports all of the documented APIs listed in the [API reference](https://developers.wargaming.net/reference/).
 
 * World of Tanks
@@ -22,6 +26,8 @@ yarn add wargamer
 ```
 
 ## Usage
+Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://hkwu.github.io/wargamer).
+
 ```js
 import Wargamer from 'wargamer';
 
@@ -37,6 +43,7 @@ tanks.fetch('account/list', { search: 'Straik' })
 ```
 
 ## References
+* [Wargamer Documentation](https://hkwu.github.io/wargamer)
 * [Wargaming.net Developer's Room](https://developers.wargaming.net/)
 * [Wargaming.net API Documentation](https://developers.wargaming.net/documentation/)
 * [Wargaming.net API Reference and Interactive Console](https://developers.wargaming.net/reference/)
