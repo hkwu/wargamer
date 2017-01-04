@@ -5,11 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.1.2] - 2017-01-03
 ### Added
 - Webpack bundles for the client.
 
 ### Fixed
-- Undefined property issue in client while handling responses
+- Undefined property issue in client while handling responses.
 
 ## [0.1.1] - 2017-01-03
 ### Added
@@ -27,5 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unit tests and continuous integration.
 - Documentation build process.
 
-[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/hkwu/wargamer/compare/v0.1.1...0.1.2
 [0.1.1]: https://github.com/hkwu/wargamer/compare/v0.1.0...v0.1.1
