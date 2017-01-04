@@ -225,7 +225,7 @@ class BaseClient {
         throw new APIError({
           client: this,
           statusCode: response.status,
-          url: response.request.url,
+          url: response.req.url,
           method: normalizedMethod,
           error,
         });
@@ -234,7 +234,7 @@ class BaseClient {
       return new APIResponse({
         client: this,
         requestRealm: normalizedRealm,
-        url: response.request.url,
+        url: response.req.url,
         method: normalizedMethod,
         response: response.body,
       });
@@ -246,7 +246,7 @@ class BaseClient {
         throw value;
       }
 
-      const { response: { error, request: req } } = value;
+      const { response: { error, req } } = value;
 
       throw new RequestError({
         message: value.response.error.message,
