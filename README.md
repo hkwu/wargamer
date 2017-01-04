@@ -34,6 +34,8 @@ Web bundles are available as well.
 </script>
 ```
 
+The web distribution is hosted on [jsDelivr](https://www.jsdelivr.com/).
+
 ## Usage
 Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://wargamer.js.org/).
 

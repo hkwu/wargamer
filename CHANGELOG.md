@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.1.2] - 2017-01-03
+## [0.1.2] - 2017-01-04
 ### Added
 - Webpack bundles for the client.
 
