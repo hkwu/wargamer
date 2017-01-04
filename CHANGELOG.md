@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Webpack bundles for the client.
 
 ### Fixed
-- Undefined property issue in client while handling responses
+- Undefined property issue in client while handling responses.
 
 ## [0.1.1] - 2017-01-03
 ### Added
