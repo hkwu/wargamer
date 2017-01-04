@@ -25,6 +25,15 @@ or
 yarn add wargamer
 ```
 
+Web bundles are available as well.
+
+```html
+<script src="wargamer.min.js"></script>
+<script>
+  const wot = new wargamer.WorldOfTanks({ /* ... */ });
+</script>
+```
+
 ## Usage
 Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://wargamer.js.org/).
 
