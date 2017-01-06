@@ -20,6 +20,10 @@
   },
   "license": "MIT",
   "author": "Kelvin Wu <kelvinwu1996@gmail.com>",
+  "files": [
+    "lib",
+    "dist"
+  ],
   "main": "lib/index.js",
   "repository": {
     "type": "git",
