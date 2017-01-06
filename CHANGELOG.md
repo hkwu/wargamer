@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Removed
+- Wiped out `.npmignore` in favour of `package.json`.
+- Web distribution removed from version control.
 
 ## [0.1.2] - 2017-01-04
 ### Added
