@@ -34,7 +34,9 @@ Web bundles are available as well.
 </script>
 ```
 
-The web distribution is hosted on [jsDelivr](https://www.jsdelivr.com/).
+The web distribution is hosted by the following CDNs:
+- [unpkg](https://unpkg.com/#/) - Files are located under `dist/` (e.g. `dist/wargamer.min.js`).
+- [jsDelivr](https://www.jsdelivr.com/) - See the library's [project entry](https://www.jsdelivr.com/projects/wargamer).
 
 ## Usage
 Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://wargamer.js.org/).
