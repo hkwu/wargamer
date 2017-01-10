@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const common = {
   entry: './src/index.js',
   output: {
-    library: 'wargamer',
+    library: 'Wargamer',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist'),
     umdNamedDefine: true,
