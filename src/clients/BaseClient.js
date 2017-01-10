@@ -11,39 +11,13 @@ import mapValues from '../utils/mapValues';
  * @property {string} applicationId - The application ID of this client.
  * @property {string} [accessToken=null] - The access token for this client,
  *   if it will be using one.
- * @property {string} [requestMethod='POST'] - The default request method for
- *   this client.
  */
 
 /**
  * The options available to use when making a single request.
  * @typedef {Object} RequestOptions
  * @property {string} [realm] - The realm/region to use for the request.
- * @property {string} [requestMethod] - The method to use for the request.
  */
-
-/**
- * Valid request methods for the Wargaming API.
- * @type {Set.<string>}
- * @constant
- * @private
- */
-const VALID_REQUEST_METHODS = new Set(['GET', 'POST']);
-
-/**
- * Checks if a request method is valid.
- * @param {string} method - The request method.
- * @returns {boolean} True if the method is valid.
- * @throws {TypeError} Thrown if the given request method is not a string.
- * @private
- */
-const isValidRequestMethod = (method) => {
-  if (typeof method !== 'string') {
-    throw new TypeError('Given request method must be a string.');
-  }
-
-  return VALID_REQUEST_METHODS.has(method.toUpperCase());
-};
 
 /**
  * Mapping between realms and their TLDs.
@@ -108,17 +82,14 @@ class BaseClient {
    *   for this client.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
-  constructor({ type, realm, applicationId, accessToken = null, requestMethod = 'POST' }) {
+  constructor({ type, realm, applicationId, accessToken = null }) {
     if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
       throw new TypeError('Must specify a valid realm for the client.');
     } else if (typeof applicationId !== 'string') {
       throw new TypeError('Must specify an application ID for the client.');
-    } else if (!isValidRequestMethod(requestMethod)) {
-      throw new TypeError('Must specify a valid request method.');
     }
 
     const normalizedRealm = realm.toLowerCase();
-    const normalizedRequestMethod = requestMethod.toUpperCase();
 
     /**
      * The type of API this client is for.
@@ -149,13 +120,6 @@ class BaseClient {
     this.accessToken = accessToken;
 
     /**
-     * The default request method to use. One of `'GET'` or `'POST'`.
-     * @type {string}
-     * @private
-     */
-    this.requestMethod = normalizedRequestMethod;
-
-    /**
      * The base API URI for this client.
      * @type {string}
      * @private
@@ -181,7 +145,7 @@ class BaseClient {
   }
 
   /**
-   * Fetches data from an endpoint method.
+   * Sends a GET request to the API.
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
@@ -189,17 +153,41 @@ class BaseClient {
    *   API data, or rejecting with an error.
    * @throws {TypeError} Thrown if any parameters are not the right type.
    */
-  fetch(method, params = {}, options = {}) {
-    const { realm = this.realm, requestMethod = this.requestMethod } = options;
+  get(method, params = {}, options = {}) {
+    return this.request(method, params, { ...options, requestMethod: 'GET' });
+  }
+
+  /**
+   * Sends a POST request to the API.
+   * @param {string} method - The method to request.
+   * @param {Object} [params={}] - The parameters to include in the request.
+   * @param {RequestOptions} [options={}] - Options used to override client defaults.
+   * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
+   *   API data, or rejecting with an error.
+   * @throws {TypeError} Thrown if any parameters are not the right type.
+   */
+  post(method, params = {}, options = {}) {
+    return this.request(method, params, { ...options, requestMethod: 'POST' });
+  }
+
+  /**
+   * Fetches data from an endpoint method.
+   * @param {string} method - The method to request.
+   * @param {Object} [params={}] - The parameters to include in the request.
+   * @param {RequestOptions} [options={}] - Options used to override client defaults.
+   * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
+   *   API data, or rejecting with an error.
+   * @throws {TypeError} Thrown if any parameters are not the right type.
+   * @private
+   */
+  request(method, params = {}, options = {}) {
+    const { realm = this.realm, requestMethod } = options;
 
     if (typeof method !== 'string') {
       throw new TypeError('Expected method to be a string.');
-    } else if (!isValidRequestMethod(requestMethod)) {
-      throw new TypeError('Must specify a valid request method.');
     }
 
     const normalizedMethod = method.toLowerCase();
-    const normalizedRequestMethod = requestMethod.toUpperCase();
     const normalizedRealm = realm.toLowerCase();
 
     // construct the request URL
@@ -256,7 +244,7 @@ class BaseClient {
       });
     };
 
-    switch (normalizedRequestMethod) {
+    switch (requestMethod) {
       case 'GET':
         return request.get(requestUrl)
           .query(normalizedPayload)

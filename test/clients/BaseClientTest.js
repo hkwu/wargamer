@@ -20,7 +20,6 @@ describe('BaseClient', function() {
       expect(defaultOptions.realm).to.equal(options.realm);
       expect(defaultOptions.applicationId).to.equal(options.applicationId);
       expect(defaultOptions.accessToken).to.be.null;
-      expect(defaultOptions.requestMethod).to.equal('POST');
       expect(defaultOptions.baseUri).to.equal('https://api.worldoftanks.com/wot');
 
       const accessToken = new BaseClient({
@@ -32,20 +31,7 @@ describe('BaseClient', function() {
       expect(accessToken.realm).to.equal(options.realm);
       expect(accessToken.applicationId).to.equal(options.applicationId);
       expect(accessToken.accessToken).to.equal('foo');
-      expect(accessToken.requestMethod).to.equal('POST');
       expect(accessToken.baseUri).to.equal('https://api.worldoftanks.com/wot');
-
-      const requestMethod = new BaseClient({
-        ...options,
-        requestMethod: 'get',
-      });
-
-      expect(requestMethod.type).to.equal(options.type);
-      expect(requestMethod.realm).to.equal(options.realm);
-      expect(requestMethod.applicationId).to.equal(options.applicationId);
-      expect(requestMethod.accessToken).to.be.null;
-      expect(requestMethod.requestMethod).to.equal('GET');
-      expect(requestMethod.baseUri).to.equal('https://api.worldoftanks.com/wot');
     });
 
     it('errors for malformed constructor options', function() {
@@ -72,15 +58,6 @@ describe('BaseClient', function() {
       };
 
       expect(() => new BaseClient(nonStringApplicationId)).to.throw(TypeError);
-
-      const invalidRequestMethod = {
-        type: 'wot',
-        realm: 'na',
-        applicationId: 'demo',
-        requestMethod: 'PATCH',
-      };
-
-      expect(() => new BaseClient(invalidRequestMethod)).to.throw(TypeError);
     });
   });
 
@@ -111,7 +88,7 @@ describe('BaseClient', function() {
         applicationId: process.env.APPLICATION_ID,
       });
 
-      const accountListSearch = client.fetch('account/list', { search: 'test' });
+      const accountListSearch = client.get('account/list', { search: 'test' });
 
       it('fulfills with an APIResponse', function() {
         return expect(accountListSearch).to.eventually.be.instanceof(APIResponse);
@@ -126,10 +103,13 @@ describe('BaseClient', function() {
       });
 
       it('works with GET', function() {
-        const accountListSearchGet = client.fetch('account/list', {
-          search: 'test',
-          requestMethod: 'GET',
-        });
+        const accountListSearchGet = client.get('account/list', { search: 'test' });
+
+        return expect(accountListSearchGet).to.eventually.be.instanceof(APIResponse);
+      });
+
+      it('works with POST', function() {
+        const accountListSearchGet = client.post('account/list', { search: 'test' });
 
         return expect(accountListSearchGet).to.eventually.be.instanceof(APIResponse);
       });
@@ -141,7 +121,7 @@ describe('BaseClient', function() {
           applicationId: 'lol',
         });
 
-        const overriden = badClient.fetch('account/list', {
+        const overriden = badClient.get('account/list', {
           search: 'test',
           application_id: process.env.APPLICATION_ID,
         });
@@ -150,19 +130,19 @@ describe('BaseClient', function() {
       });
 
       it('overrides default client options as needed', function() {
-        const accountListSearchRu = client.fetch('account/list', { search: 'Straik' }, { realm: 'ru' });
+        const accountListSearchRu = client.get('account/list', { search: 'Straik' }, { realm: 'ru' });
 
         return expect(accountListSearchRu.then(response => response.requestRealm)).to.eventually.equal('ru');
       });
 
       it('trims method name slashes as needed', function() {
-        const accountListSearchSlashes = client.fetch('/account/list/', { search: 'test' });
+        const accountListSearchSlashes = client.get('/account/list/', { search: 'test' });
 
         return expect(accountListSearchSlashes).to.eventually.be.instanceof(APIResponse);
       });
 
       it('normalizes parameter values as needed', function() {
-        const mapSearchIdAndNameOnly = client.fetch('encyclopedia/arenas', {
+        const mapSearchIdAndNameOnly = client.get('encyclopedia/arenas', {
           fields: [
             'arena_id',
             'name_i18n',
@@ -187,7 +167,7 @@ describe('BaseClient', function() {
         applicationId: process.env.APPLICATION_ID,
       });
 
-      const accountListSearchBadApplicationId = client.fetch('account/list', {
+      const accountListSearchBadApplicationId = client.get('account/list', {
         search: 'test',
         application_id: 'foo',
       }).catch(error => error);
