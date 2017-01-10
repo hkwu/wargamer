@@ -35,8 +35,8 @@ Web bundles are available as well.
 ```
 
 The web distribution is hosted by the following CDNs:
-- [unpkg](https://unpkg.com/#/) - Files are located under `dist/` (e.g. `dist/wargamer.min.js`).
-- [jsDelivr](https://www.jsdelivr.com/) - See the library's [project entry](https://www.jsdelivr.com/projects/wargamer).
+- [unpkg](https://unpkg.com/#/) - files are located under `dist/` (e.g. `dist/wargamer.min.js`).
+- [jsDelivr](https://www.jsdelivr.com/) - see the library's [project entry](https://www.jsdelivr.com/projects/wargamer).
 
 ## Usage
 Below is a sample of Wargamer code. More details and examples are available on the [documentation site](https://wargamer.js.org/).
@@ -46,7 +46,7 @@ import Wargamer from 'wargamer';
 
 const tanks = Wargamer.WoT({ realm: 'ru', applicationId: 'application_id'});
 
-tanks.fetch('account/list', { search: 'Straik' })
+tanks.get('account/list', { search: 'Straik' })
   .then((response) => {
     console.log(response.meta); // { count: 100 }
     console.log(response.data); // [{ nickname: 'Straik', account_id: 73892 }, ...]
