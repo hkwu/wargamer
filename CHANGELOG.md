@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.2.0] - 2017-01-09
 ### Changed
 - `client.fetch()` is now a private method. Requests must now go through `client.get()` or `client.post()`. The `requestMethod` option is no longer available.
+- Web distribution: the Wargamer object is now available as `Wargamer` or `window.Wargamer` (the name is capitalized).
 
 ### Removed
 - Wiped out `.npmignore` in favour of `package.json`.

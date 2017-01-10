@@ -30,7 +30,7 @@ Web bundles are available as well.
 ```html
 <script src="wargamer.min.js"></script>
 <script>
-  const wot = new wargamer.WorldOfTanks({ /* ... */ });
+  const wot = new window.Wargamer.WorldOfTanks({ /* ... */ });
 </script>
 ```
 
