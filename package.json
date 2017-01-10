@@ -1,6 +1,6 @@
 {
   "name": "wargamer",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Node.js client library for the Wargaming.net API.",
   "keywords": [
     "client library",
