@@ -36,7 +36,8 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "mocha --require babel-register --recursive",
-    "prepublish": "npm run build && npm test",
+    "prepublish": "npm run build && npm run build:browser && npm test",
+    "postpublish": "npm run docs:publish",
     "docs:build": "docma -c docma.config.json --dest _gh_pages",
     "docs:prepublish": "npm run docs:build && cp CNAME _gh_pages/CNAME",
     "docs:publish": "npm run docs:prepublish && cd _gh_pages && git init && git checkout -b gh-pages && git add . && git commit -am 'Update docs.' && git push git@github.com:hkwu/wargamer gh-pages --force"
