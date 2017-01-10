@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2017-01-09
+### Changed
+- Publishing process.
+
+### Removed
+- Web distribution from version control. For real this time.
+
 ## [0.2.0] - 2017-01-09
 ### Changed
 - `client.fetch()` is now a private method. Requests must now go through `client.get()` or `client.post()`. The `requestMethod` option is no longer available.
@@ -38,7 +45,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unit tests and continuous integration.
 - Documentation build process.
 
-[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/hkwu/wargamer/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/hkwu/wargamer/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/hkwu/wargamer/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hkwu/wargamer/compare/v0.1.0...v0.1.1
