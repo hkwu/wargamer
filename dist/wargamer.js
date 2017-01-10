@@ -25,11 +25,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("wargamer", [], factory);
+		define("Wargamer", [], factory);
 	else if(typeof exports === 'object')
-		exports["wargamer"] = factory();
+		exports["Wargamer"] = factory();
 	else
-		root["wargamer"] = factory();
+		root["Wargamer"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -145,39 +145,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @property {string} applicationId - The application ID of this client.
  * @property {string} [accessToken=null] - The access token for this client,
  *   if it will be using one.
- * @property {string} [requestMethod='POST'] - The default request method for
- *   this client.
  */
 
 /**
  * The options available to use when making a single request.
  * @typedef {Object} RequestOptions
  * @property {string} [realm] - The realm/region to use for the request.
- * @property {string} [requestMethod] - The method to use for the request.
  */
-
-/**
- * Valid request methods for the Wargaming API.
- * @type {Set.<string>}
- * @constant
- * @private
- */
-var VALID_REQUEST_METHODS = new Set(['GET', 'POST']);
-
-/**
- * Checks if a request method is valid.
- * @param {string} method - The request method.
- * @returns {boolean} True if the method is valid.
- * @throws {TypeError} Thrown if the given request method is not a string.
- * @private
- */
-var isValidRequestMethod = function isValidRequestMethod(method) {
-  if (typeof method !== 'string') {
-    throw new TypeError('Given request method must be a string.');
-  }
-
-  return VALID_REQUEST_METHODS.has(method.toUpperCase());
-};
 
 /**
  * Mapping between realms and their TLDs.
@@ -260,9 +234,7 @@ var BaseClient = function () {
         realm = _ref.realm,
         applicationId = _ref.applicationId,
         _ref$accessToken = _ref.accessToken,
-        accessToken = _ref$accessToken === undefined ? null : _ref$accessToken,
-        _ref$requestMethod = _ref.requestMethod,
-        requestMethod = _ref$requestMethod === undefined ? 'POST' : _ref$requestMethod;
+        accessToken = _ref$accessToken === undefined ? null : _ref$accessToken;
 
     _classCallCheck(this, BaseClient);
 
@@ -270,12 +242,9 @@ var BaseClient = function () {
       throw new TypeError('Must specify a valid realm for the client.');
     } else if (typeof applicationId !== 'string') {
       throw new TypeError('Must specify an application ID for the client.');
-    } else if (!isValidRequestMethod(requestMethod)) {
-      throw new TypeError('Must specify a valid request method.');
     }
 
     var normalizedRealm = realm.toLowerCase();
-    var normalizedRequestMethod = requestMethod.toUpperCase();
 
     /**
      * The type of API this client is for.
@@ -306,13 +275,6 @@ var BaseClient = function () {
     this.accessToken = accessToken;
 
     /**
-     * The default request method to use. One of `'GET'` or `'POST'`.
-     * @type {string}
-     * @private
-     */
-    this.requestMethod = normalizedRequestMethod;
-
-    /**
      * The base API URI for this client.
      * @type {string}
      * @private
@@ -330,8 +292,43 @@ var BaseClient = function () {
 
 
   _createClass(BaseClient, [{
-    key: 'fetch',
+    key: 'get',
 
+
+    /**
+     * Sends a GET request to the API.
+     * @param {string} method - The method to request.
+     * @param {Object} [params={}] - The parameters to include in the request.
+     * @param {RequestOptions} [options={}] - Options used to override client defaults.
+     * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
+     *   API data, or rejecting with an error.
+     * @throws {TypeError} Thrown if any parameters are not the right type.
+     */
+    value: function get(method) {
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this.request(method, params, _extends({}, options, { requestMethod: 'GET' }));
+    }
+
+    /**
+     * Sends a POST request to the API.
+     * @param {string} method - The method to request.
+     * @param {Object} [params={}] - The parameters to include in the request.
+     * @param {RequestOptions} [options={}] - Options used to override client defaults.
+     * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
+     *   API data, or rejecting with an error.
+     * @throws {TypeError} Thrown if any parameters are not the right type.
+     */
+
+  }, {
+    key: 'post',
+    value: function post(method) {
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this.request(method, params, _extends({}, options, { requestMethod: 'POST' }));
+    }
 
     /**
      * Fetches data from an endpoint method.
@@ -341,26 +338,26 @@ var BaseClient = function () {
      * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
      *   API data, or rejecting with an error.
      * @throws {TypeError} Thrown if any parameters are not the right type.
+     * @private
      */
-    value: function fetch(method) {
+
+  }, {
+    key: 'request',
+    value: function request(method) {
       var _this = this;
 
       var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       var _options$realm = options.realm,
           realm = _options$realm === undefined ? this.realm : _options$realm,
-          _options$requestMetho = options.requestMethod,
-          requestMethod = _options$requestMetho === undefined ? this.requestMethod : _options$requestMetho;
+          requestMethod = options.requestMethod;
 
 
       if (typeof method !== 'string') {
         throw new TypeError('Expected method to be a string.');
-      } else if (!isValidRequestMethod(requestMethod)) {
-        throw new TypeError('Must specify a valid request method.');
       }
 
       var normalizedMethod = method.toLowerCase();
-      var normalizedRequestMethod = requestMethod.toUpperCase();
       var normalizedRealm = realm.toLowerCase();
 
       // construct the request URL
@@ -419,7 +416,7 @@ var BaseClient = function () {
         });
       };
 
-      switch (normalizedRequestMethod) {
+      switch (requestMethod) {
         case 'GET':
           return _superagent2.default.get(requestUrl).query(normalizedPayload).then(fulfill).catch(reject);
         case 'POST':
