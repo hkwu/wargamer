@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- `client.renewAccessToken()` and `client.destroyAccessToken()` as convenience methods for the respective authentication endpoints.
 
 ## [0.2.1] - 2017-01-09
 ### Changed
