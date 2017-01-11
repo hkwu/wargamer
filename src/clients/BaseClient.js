@@ -95,35 +95,35 @@ class BaseClient {
     /**
      * The type of API this client is for.
      * @type {string}
-     * @protected
+     * @private
      */
     this.type = type;
 
     /**
      * The realm, i.e. region of this client.
      * @type {string}
-     * @protected
+     * @private
      */
     this.realm = normalizedRealm;
 
     /**
      * The application ID for this client.
      * @type {string}
-     * @protected
+     * @private
      */
     this.applicationId = applicationId;
 
     /**
      * The access token for this client.
      * @type {?string}
-     * @protected
+     * @private
      */
     this.accessToken = accessToken;
 
     /**
      * The base API URI for this client.
      * @type {string}
-     * @protected
+     * @private
      */
     this.baseUri = getBaseUri(normalizedRealm, type);
   }
@@ -176,9 +176,9 @@ class BaseClient {
    *   request, the client's current access token will be updated with the
    *   returned token.
    * @param {RequestOptions} [options={}] - The options for the request.
-   * @returns {Promise.<APIResponse, (Error|boolean)>} Returns the same value as
-   *   a normal request if the client's access token is defined, else rejects
-   *   with a plain `Error`.
+   * @returns {Promise.<APIResponse, Error>} Returns the same value as a normal
+   *   request if the client's access token is defined, else rejects with a
+   *   plain `Error`.
    */
   renewAccessToken(options = {}) {
     if (!this.accessToken) {
@@ -199,9 +199,9 @@ class BaseClient {
    * Sends a request to invalidate the client's access token. Upon a successful
    *   request, the client's current access token will be set to `null`.
    * @param {RequestOptions} [options={}] - The options for the request.
-   * @returns {Promise.<APIResponse, (Error|boolean)>} Returns the same value as
-   *   a normal request if the client's access token is defined, else rejects
-   *   with a plain `Error`.
+   * @returns {Promise.<APIResponse, Error>} Returns the same value as a normal
+   *   request if the client's access token is defined, else rejects with a
+   *   plain `Error`.
    */
   destroyAccessToken(options = {}) {
     if (!this.accessToken) {
