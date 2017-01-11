@@ -17,6 +17,9 @@ import mapValues from '../utils/mapValues';
  * The options available to use when making a single request.
  * @typedef {Object} RequestOptions
  * @property {string} [realm] - The realm/region to use for the request.
+ *   One of: `ru`, `eu`, `na`, `kr`, `asia`, `xbox`, `ps4`.
+ * @property {string} [type] - The API to send this request to. One of: `wot`,
+ *   `wotb`, `wotx`, `wows`, `wowp`, `wgn`.
  */
 
 /**
@@ -78,8 +81,6 @@ class BaseClient {
    * @param {string} options.applicationId - The application ID of this client.
    * @param {string} [options.accessToken=null] - The access token for this
    *   client, if it will be using one.
-   * @param {string} [options.requestMethod='POST'] - The default request method
-   *   for this client.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor({ type, realm, applicationId, accessToken = null }) {
@@ -94,35 +95,35 @@ class BaseClient {
     /**
      * The type of API this client is for.
      * @type {string}
-     * @private
+     * @protected
      */
     this.type = type;
 
     /**
      * The realm, i.e. region of this client.
      * @type {string}
-     * @private
+     * @protected
      */
     this.realm = normalizedRealm;
 
     /**
      * The application ID for this client.
      * @type {string}
-     * @private
+     * @protected
      */
     this.applicationId = applicationId;
 
     /**
      * The access token for this client.
      * @type {?string}
-     * @private
+     * @protected
      */
     this.accessToken = accessToken;
 
     /**
      * The base API URI for this client.
      * @type {string}
-     * @private
+     * @protected
      */
     this.baseUri = getBaseUri(normalizedRealm, type);
   }
@@ -149,12 +150,12 @@ class BaseClient {
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
-   * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
-   *   API data, or rejecting with an error.
+   * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
+   *   returned API data, or rejecting with an error.
    * @throws {TypeError} Thrown if any parameters are not the right type.
    */
   get(method, params = {}, options = {}) {
-    return this.request(method, params, { ...options, requestMethod: 'GET' });
+    return this.request(method, params, { ...options, method: 'GET' });
   }
 
   /**
@@ -162,39 +163,86 @@ class BaseClient {
    * @param {string} method - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
-   * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
-   *   API data, or rejecting with an error.
+   * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
+   *   returned API data, or rejecting with an error.
    * @throws {TypeError} Thrown if any parameters are not the right type.
    */
   post(method, params = {}, options = {}) {
-    return this.request(method, params, { ...options, requestMethod: 'POST' });
+    return this.request(method, params, { ...options, method: 'POST' });
+  }
+
+  /**
+   * Sends a request to renew the client's access token. Upon a successful
+   *   request, the client's current access token will be updated with the
+   *   returned token.
+   * @param {RequestOptions} [options={}] - The options for the request.
+   * @returns {Promise.<APIResponse, (Error|boolean)>} Returns the same value as
+   *   a normal request if the client's access token is defined, else rejects
+   *   with a plain `Error`.
+   */
+  renewAccessToken(options = {}) {
+    if (!this.accessToken) {
+      return Promise.reject(new Error('Failed to renew access token: client\'s access token is not set.'));
+    }
+
+    return this.post('auth/prolongate', {}, {
+      ...options,
+      type: this.type === 'wotx' ? 'wotx' : 'wot',
+    }).then((response) => {
+      this.accessToken = response.data.access_token;
+
+      return response;
+    });
+  }
+
+  /**
+   * Sends a request to invalidate the client's access token. Upon a successful
+   *   request, the client's current access token will be set to `null`.
+   * @param {RequestOptions} [options={}] - The options for the request.
+   * @returns {Promise.<APIResponse, (Error|boolean)>} Returns the same value as
+   *   a normal request if the client's access token is defined, else rejects
+   *   with a plain `Error`.
+   */
+  destroyAccessToken(options = {}) {
+    if (!this.accessToken) {
+      return Promise.reject(new Error('Failed to invalidate access token: client\'s access token is not set.'));
+    }
+
+    return this.post('auth/logout', {}, {
+      ...options,
+      type: this.type === 'wotx' ? 'wotx' : 'wot',
+    }).then((response) => {
+      this.accessToken = null;
+
+      return response;
+    });
   }
 
   /**
    * Fetches data from an endpoint method.
-   * @param {string} method - The method to request.
+   * @param {string} apiMethod - The method to request.
    * @param {Object} [params={}] - The parameters to include in the request.
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
-   * @returns {Promise.<Object, Error>} Returns a promise resolving to the returned
-   *   API data, or rejecting with an error.
+   * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
+   *   returned API data, or rejecting with an error.
    * @throws {TypeError} Thrown if any parameters are not the right type.
    * @private
    */
-  request(method, params = {}, options = {}) {
-    const { realm = this.realm, requestMethod } = options;
+  request(apiMethod, params = {}, options = {}) {
+    const { type = this.type, realm = this.realm, method = 'GET' } = options;
 
-    if (typeof method !== 'string') {
-      throw new TypeError('Expected method to be a string.');
+    if (typeof apiMethod !== 'string') {
+      throw new TypeError('Expected API method to be a string.');
     }
 
-    const normalizedMethod = method.toLowerCase();
+    const normalizedApiMethod = apiMethod.toLowerCase();
     const normalizedRealm = realm.toLowerCase();
 
     // construct the request URL
     const baseUrl = normalizedRealm === this.realm
       ? this.baseUri
-      : getBaseUri(normalizedRealm, this.type);
-    const requestUrl = `${baseUrl}/${normalizedMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
+      : getBaseUri(normalizedRealm, type);
+    const requestUrl = `${baseUrl}/${normalizedApiMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
 
     // construct the payload
     const payload = {
@@ -214,7 +262,7 @@ class BaseClient {
           client: this,
           statusCode: response.status,
           url: response.req.url,
-          method: normalizedMethod,
+          method: normalizedApiMethod,
           error,
         });
       }
@@ -223,7 +271,7 @@ class BaseClient {
         client: this,
         requestRealm: normalizedRealm,
         url: response.req.url,
-        method: normalizedMethod,
+        method: normalizedApiMethod,
         response: response.body,
       });
     };
@@ -244,7 +292,7 @@ class BaseClient {
       });
     };
 
-    switch (requestMethod) {
+    switch (method) {
       case 'GET':
         return request.get(requestUrl)
           .query(normalizedPayload)
@@ -257,7 +305,7 @@ class BaseClient {
           .then(fulfill)
           .catch(reject);
       default:
-        // we should never get here anyways
+        // we should never get here
         return Promise.reject(new Error('Received invalid request method.'));
     }
   }
