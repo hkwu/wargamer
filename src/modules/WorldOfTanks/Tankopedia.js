@@ -12,7 +12,8 @@ class Tankopedia extends ClientModule {
   constructor(client) {
     super(client, 'tankopedia');
 
-    this.initializeCaches();
+    this.createCache('meta', { cacheTTL: this.DEFAULT_CACHE_TTL });
+    this.createCache('vehicles:names', { cacheTTL: this.DEFAULT_CACHE_TTL });
   }
 
   /**
@@ -36,19 +37,31 @@ class Tankopedia extends ClientModule {
       ).then(response => response.data[identifier]);
     } else if (typeof identifier === 'string') {
       const cache = this.getCache('vehicles:names');
-      const results = cache.get('fuse').search(identifier);
+      const handleSearchResults = (results) => {
+        if (!results.length) {
+          return Promise.resolve(null);
+        }
 
-      if (!results.length) {
-        return Promise.resolve(null);
+        const [{ tank_id }] = results;
+
+        return this.client.get(
+          'encyclopedia/vehicles',
+          { tank_id },
+          options,
+        ).then(response => response.data[tank_id]);
+      };
+
+      if (cache.empty) {
+        return this.buildVehicleNamesCache(cache).then((builtCache) => {
+          const results = builtCache.get('fuse').search(identifier);
+
+          return handleSearchResults(results);
+        });
       }
 
-      const [{ tank_id }] = results;
+      const results = cache.get('fuse').search(identifier);
 
-      return this.client.get(
-        'encyclopedia/vehicles',
-        { tank_id },
-        options,
-      ).then(response => response.data[tank_id]);
+      return handleSearchResults(results);
     }
 
     throw new TypeError('Expected a string or number as the vehicle identifier.');
@@ -58,26 +71,37 @@ class Tankopedia extends ClientModule {
    * Translates a given slug value using one of the mappings returned from the API.
    * @param {string} type - The type of translation to perform.
    * @param {string} slug - The slug to translate.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
-   * @throws {Error} Thrown if the `type` is not valid.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateSlug(type, slug) {
     const cache = this.getCache('meta');
-    const translationMap = cache.get(type);
+    const handleTranslation = (translationMap) => {
+      if (!translationMap || typeof translationMap !== 'object') {
+        return Promise.reject(Error(`Invalid translation type: ${type}.`));
+      }
 
-    if (!translationMap || typeof translationMap !== 'object') {
-      throw new Error(`Invalid translation type: ${type}.`);
+      return Promise.resolve(translationMap[slug]);
+    };
+
+    if (cache.empty) {
+      return this.buildMetaCache(cache).then((builtCache) => {
+        const translationMap = builtCache.get(type);
+
+        return handleTranslation(translationMap);
+      });
     }
 
-    return translationMap[slug];
+    const translationMap = cache.get(type);
+
+    return handleTranslation(translationMap);
   }
 
   /**
    * Translates a crew role slug.
    * @param {string} roleSlug - The slug.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateCrewRole(roleSlug) {
     return this.translateSlug('vehicle_crew_roles', roleSlug);
@@ -86,8 +110,8 @@ class Tankopedia extends ClientModule {
   /**
    * Translates a language slug.
    * @param {string} languageSlug - The slug.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateLanguage(languageSlug) {
     return this.translateSlug('languages', languageSlug);
@@ -97,20 +121,21 @@ class Tankopedia extends ClientModule {
    * Translates an achievement section slug. The returned value is the section's
    *   name.
    * @param {string} achievementSectionSlug - The slug.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateAchievementSection(achievementSectionSlug) {
-    const section = this.translateSlug('achievement_sections', achievementSectionSlug);
-
-    return section && section.name;
+    return this.translateSlug(
+      'achievement_sections',
+      achievementSectionSlug,
+    ).then(section => section && section.name);
   }
 
   /**
    * Translates a vehicle type slug.
    * @param {string} vehicleTypeSlug - The slug.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateVehicleType(vehicleTypeSlug) {
     return this.translateSlug('vehicle_types', vehicleTypeSlug);
@@ -119,8 +144,8 @@ class Tankopedia extends ClientModule {
   /**
    * Translates a vehicle nation slug.
    * @param {string} vehicleNationSlug - The slug.
-   * @returns {(string|undefined)} The translated slug, or `undefined` if it couldn't
-   *   be translated.
+   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
+   *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateVehicleNation(vehicleNationSlug) {
     return this.translateSlug('vehicle_nations', vehicleNationSlug);
@@ -132,11 +157,7 @@ class Tankopedia extends ClientModule {
    * @returns {Promise.<Cache, Error>} Promise resolving to the cache that was given.
    * @private
    */
-  initializeMetaCache(cache) {
-    if (cache.size) {
-      return Promise.resolve(cache);
-    }
-
+  buildMetaCache(cache) {
     return this.client.get('encyclopedia/info').then((response) => {
       Object.keys(response.data).forEach((key) => {
         cache.set(key, response.data[key]);
@@ -152,11 +173,7 @@ class Tankopedia extends ClientModule {
    * @returns {Promise.<Cache, Error>} Promise resolving to the cache that was given.
    * @private
    */
-  initializeVehicleNamesCache(cache) {
-    if (cache.size) {
-      return Promise.resolve(cache);
-    }
-
+  buildVehicleNamesCache(cache) {
     return this.client.get('encyclopedia/vehicles', {
       fields: [
         'name',
@@ -179,18 +196,6 @@ class Tankopedia extends ClientModule {
 
       return cache;
     });
-  }
-
-  /**
-   * Initializes the module caches.
-   * @private
-   */
-  initializeCaches() {
-    const metaCache = this.createCache('meta');
-    const vehicleNamesCache = this.createCache('vehicles:names');
-
-    this.initializeMetaCache(metaCache);
-    this.initializeVehicleNamesCache(vehicleNamesCache);
   }
 }
 
