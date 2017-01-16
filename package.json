@@ -31,12 +31,12 @@
   },
   "scripts": {
     "build": "babel src --out-dir lib",
-    "build:browser": "webpack --env.target=dev && webpack --env.target=prod",
+    "build:umd": "webpack --env.target=dev && webpack --env.target=prod",
     "watch": "babel --watch src --out-dir lib",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "mocha --require babel-register --recursive",
-    "prepublish": "npm run build && npm test",
+    "prepublishOnly": "npm run build && npm test",
     "postpublish": "npm run docs:publish",
     "docs:build": "docma -c docma.config.json --dest _gh_pages",
     "docs:prepublish": "npm run docs:build && cp CNAME _gh_pages/CNAME",
@@ -44,11 +44,15 @@
   },
   "dependencies": {
     "es6-error": "^4.0.0",
+    "fuse.js": "^2.6.1",
     "superagent": "^3.3.1"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.10",
+    "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-preset-env": "^1.1.4",
     "babel-register": "^6.18.0",
