@@ -59,6 +59,17 @@ class Cache {
   }
 
   /**
+   * `true` if the cache has no keys stored, else `false`. Prunes expired keys
+   *   before returning the result.
+   * @type {boolean}
+   */
+  get empty() {
+    this.expiredCheck();
+
+    return this.size === 0;
+  }
+
+  /**
    * The metadata for the cache.
    * @type {Object} The cache metadata.
    */
