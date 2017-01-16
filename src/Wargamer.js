@@ -35,7 +35,7 @@ class Wargamer {
    * @returns {WorldOfTanksConsole} The API client.
    * @static
    */
-  static WoTC(options) {
+  static WoTX(options) {
     return new WorldOfTanksConsole(options);
   }
 

@@ -14,7 +14,7 @@ describe('Wargamer', function() {
 
     expect(Wargamer.WoT(options)).to.be.instanceof(WorldOfTanks);
     expect(Wargamer.WoTB(options)).to.be.instanceof(WorldOfTanksBlitz);
-    expect(Wargamer.WoTC(options)).to.be.instanceof(WorldOfTanksConsole);
+    expect(Wargamer.WoTX(options)).to.be.instanceof(WorldOfTanksConsole);
     expect(Wargamer.WoWS(options)).to.be.instanceof(WorldOfWarships);
     expect(Wargamer.WoWP(options)).to.be.instanceof(WorldOfWarplanes);
     expect(Wargamer.WGN(options)).to.be.instanceof(Wargaming);
