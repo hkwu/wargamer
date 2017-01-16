@@ -4,16 +4,19 @@ import chaiAsPromised from 'chai-as-promised';
 import WorldOfTanks from '../../../src/clients/WorldOfTanks';
 
 describe('Tankopedia', function() {
-  const client = new WorldOfTanks({
-    realm: 'na',
-    applicationId: process.env.APPLICATION_ID,
-  });
-
   before(function() {
     chai.use(chaiAsPromised);
   });
 
   describe('#findVehicle()', function() {
+    const client = new WorldOfTanks({
+      realm: 'na',
+      applicationId: process.env.APPLICATION_ID,
+    });
+
+    // need to wait quite a bit when the API response is not cached
+    this.timeout(5000);
+
     it('finds vehicles by ID', function() {
       return expect(client.tankopedia.findVehicle(6673)).to.eventually.have.property('name', 'Marder II');
     });
