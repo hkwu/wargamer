@@ -16,4 +16,4 @@ addons:
     - g++-4.8
 before_install:
 - openssl aes-256-cbc -K $encrypted_73ea1dbf79ec_key -iv $encrypted_73ea1dbf79ec_iv
-  - in .env.enc -out .env -d
+  -in .env.enc -out .env -d
