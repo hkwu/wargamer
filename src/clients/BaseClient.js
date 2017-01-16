@@ -11,15 +11,19 @@ import mapValues from '../utils/mapValues';
  * @property {string} applicationId - The application ID of this client.
  * @property {string} [accessToken=null] - The access token for this client,
  *   if it will be using one.
+ * @param {string} [language=null] - The default localization language
+ *   to use for API responses.
  */
 
 /**
  * The options available to use when making a single request.
  * @typedef {Object} RequestOptions
- * @property {string} [realm] - The realm/region to use for the request.
- *   One of: `ru`, `eu`, `na`, `kr`, `asia`, `xbox`, `ps4`.
  * @property {string} [type] - The API to send this request to. One of: `wot`,
  *   `wotb`, `wotx`, `wows`, `wowp`, `wgn`.
+ * @property {string} [realm] - The realm/region to use for the request.
+ *   One of: `ru`, `eu`, `na`, `kr`, `asia`, `xbox`, `ps4`.
+ * @property {string} [language] - The localization language to use for the
+ *   request results. Check the API reference for valid languages.
  */
 
 /**
@@ -81,9 +85,11 @@ class BaseClient {
    * @param {string} options.applicationId - The application ID of this client.
    * @param {string} [options.accessToken=null] - The access token for this
    *   client, if it will be using one.
+   * @param {string} [options.language=null] - The default localization language
+   *   to use for API responses.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
-  constructor({ type, realm, applicationId, accessToken = null }) {
+  constructor({ type, realm, applicationId, accessToken = null, language = null }) {
     if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
       throw new TypeError('Must specify a valid realm for the client.');
     } else if (typeof applicationId !== 'string') {
@@ -95,30 +101,32 @@ class BaseClient {
     /**
      * The type of API this client is for.
      * @type {string}
-     * @private
      */
     this.type = type;
 
     /**
      * The realm, i.e. region of this client.
      * @type {string}
-     * @private
      */
     this.realm = normalizedRealm;
 
     /**
      * The application ID for this client.
      * @type {string}
-     * @private
      */
     this.applicationId = applicationId;
 
     /**
      * The access token for this client.
      * @type {?string}
-     * @private
      */
     this.accessToken = accessToken;
+
+    /**
+     * The default localization language for this client.
+     * @type {?string}
+     */
+    this.language = language;
 
     /**
      * The base API URI for this client.
@@ -248,6 +256,7 @@ class BaseClient {
     const payload = {
       application_id: this.applicationId,
       access_token: this.accessToken,
+      language: this.language,
       ...params,
     };
 
