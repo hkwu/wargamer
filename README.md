@@ -30,7 +30,8 @@ Web bundles are available as well.
 ```html
 <script src="wargamer.min.js"></script>
 <script>
-  const wot = new window.Wargamer.WorldOfTanks({ /* ... */ });
+  const Wargamer = window.Wargamer;
+  const wot = new Wargamer.WorldOfTanks({ /* ... */ });
 </script>
 ```
 
@@ -44,9 +45,9 @@ Below is a sample of Wargamer code. More details and examples are available on t
 ```js
 import Wargamer from 'wargamer';
 
-const tanks = Wargamer.WoT({ realm: 'ru', applicationId: 'application_id'});
+const wot = Wargamer.WoT({ realm: 'ru', applicationId: 'application_id'});
 
-tanks.get('account/list', { search: 'Straik' })
+wot.get('account/list', { search: 'Straik' })
   .then((response) => {
     console.log(response.meta); // { count: 100 }
     console.log(response.data); // [{ nickname: 'Straik', account_id: 73892 }, ...]
