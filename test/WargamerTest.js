@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { expect } from 'chai';
 import Wargamer from '../src/Wargamer';
 import WorldOfTanks from '../src/clients/WorldOfTanks';
@@ -9,7 +10,7 @@ import Wargaming from '../src/clients/Wargaming';
 
 describe('Wargamer', function() {
   it('correctly constructs clients', function() {
-    const options = { realm: 'na', applicationId: 'demo' };
+    const options = { realm: 'na', applicationId: process.env.APPLICATION_ID };
 
     expect(Wargamer.WoT(options)).to.be.instanceof(WorldOfTanks);
     expect(Wargamer.WoTB(options)).to.be.instanceof(WorldOfTanksBlitz);

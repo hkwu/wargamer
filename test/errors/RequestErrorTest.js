@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { expect } from 'chai';
 import RequestError from '../../src/errors/RequestError';
 import WorldOfTanks from '../../src/clients/WorldOfTanks';
@@ -7,7 +8,7 @@ describe('RequestError', function() {
     it('correctly constructs itself', function() {
       const options = {
         message: 'Invalid thing',
-        client: new WorldOfTanks({ realm: 'na', applicationId: 'demo' }),
+        client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
         statusCode: 200,
         url: 'http://httpbin.org/get',
       };

@@ -11,7 +11,7 @@ describe('BaseClient', function() {
       const options = {
         type: 'wot',
         realm: 'na',
-        applicationId: 'demo',
+        applicationId: process.env.APPLICATION_ID,
       };
 
       const defaultOptions = new BaseClient(options);
@@ -38,7 +38,7 @@ describe('BaseClient', function() {
       const badRealm = {
         type: 'wot',
         realm: 'foo',
-        applicationId: 'demo',
+        applicationId: process.env.APPLICATION_ID,
       };
 
       expect(() => new BaseClient(badRealm)).to.throw(TypeError);
@@ -46,7 +46,7 @@ describe('BaseClient', function() {
       const nonStringRealm = {
         type: 'wot',
         realm: 2,
-        applicationId: 'demo',
+        applicationId: process.env.APPLICATION_ID,
       };
 
       expect(() => new BaseClient(nonStringRealm)).to.throw(TypeError);

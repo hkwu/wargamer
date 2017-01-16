@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { expect } from 'chai';
 import APIResponse from '../../src/responses/APIResponse';
 import WorldOfTanks from '../../src/clients/WorldOfTanks';
@@ -5,7 +6,7 @@ import WorldOfTanks from '../../src/clients/WorldOfTanks';
 describe('APIResponse', function() {
   describe('#constructor()', function() {
     const data = {
-      client: new WorldOfTanks({ realm: 'na', applicationId: 'demo' }),
+      client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
       requestRealm: 'na',
       url: 'http://httpbin.org/get',
       method: 'account/list',
