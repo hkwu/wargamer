@@ -19,11 +19,19 @@ describe('Tankopedia', function() {
     });
 
     it('finds vehicles by long name', function() {
-      return expect(client.tankopedia.findVehicle('wolverine')).to.eventually.have.property('name', 'M10 Wolverine');
+      return expect(client.tankopedia.findVehicle('m10 wolverine')).to.eventually.have.property('name', 'M10 Wolverine');
     });
 
     it('finds vehicles by short name', function() {
-      return expect(client.tankopedia.findVehicle('centurion ax')).to.eventually.have.property('name', 'Centurion Action X');
+      return expect(client.tankopedia.findVehicle('centurion ax')).to.eventually.have.property('short_name', 'Centurion AX');
+    });
+
+    it('finds vehicles by partial match - long name', function() {
+      return expect(client.tankopedia.findVehicle('bat-chatillon')).to.eventually.have.property('name', 'Bat.-Châtillon 25 t');
+    });
+
+    it('finds vehicles by partial match - short name', function() {
+      return expect(client.tankopedia.findVehicle('vae')).to.eventually.have.property('short_name', 'VAE Type B');
     });
 
     it('throws for invalid identifier types', function() {
