@@ -1,7 +1,7 @@
-const fs = require('fs');
-const merge = require('webpack-merge');
-const path = require('path');
-const webpack = require('webpack');
+import fs from 'fs';
+import merge from 'webpack-merge';
+import path from 'path';
+import webpack from 'webpack';
 
 const common = {
   entry: './src/index.js',
@@ -31,13 +31,13 @@ const common = {
   devtool: 'source-map',
 };
 
-const dev = {
+const development = {
   output: {
     filename: 'wargamer.js',
   },
 };
 
-const prod = {
+const production = {
   output: {
     filename: 'wargamer.min.js',
   },
@@ -52,8 +52,8 @@ module.exports = (env) => {
   switch (target) {
     case 'prod':
     case 'production':
-      return merge(common, prod);
+      return merge(common, production);
     default:
-      return merge(common, dev);
+      return merge(common, development);
   }
 };
