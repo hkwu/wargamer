@@ -67,7 +67,7 @@ const BASE_URI = {
  */
 const getBaseUri = (realm, type) => {
   if (!REALM_TLD[realm] || !BASE_URI[type]) {
-    throw new Error();
+    throw new Error('Unknown realm or type given.');
   }
 
   return BASE_URI[type](realm);
