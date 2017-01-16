@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - `client.renewAccessToken()` and `client.destroyAccessToken()` as convenience methods for the respective authentication endpoints.
+- Default `language` option for client constructor.
+- Client modules (currently just for World of Tanks).
+  - Separate components for each client with convenience methods associated with specific endpoints.
+- Caching system for client modules.
+
+### Changed
+- The World of Tanks Console client's factory method on the `Wargamer` class is now `WoTX()` instead of `WoTC()` in order to be consistent with the client slugs. The exported `WorldOfTanksConsole` client class remains the same.
 
 ## [0.2.1] - 2017-01-09
 ### Changed
