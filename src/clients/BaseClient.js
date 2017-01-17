@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import request from 'superagent';
 import APIError from '../errors/APIError';
 import APIResponse from '../responses/APIResponse';
@@ -24,6 +25,18 @@ import mapValues from '../utils/mapValues';
  *   One of: `ru`, `eu`, `na`, `kr`, `asia`, `xbox`, `ps4`.
  * @property {string} [language] - The localization language to use for the
  *   request results. Check the API reference for valid languages.
+ */
+
+/**
+ * Emitted when a client request is successful.
+ * @event BaseClient#requestFulfilled
+ * @param {APIResponse} response - The response object.
+ */
+
+/**
+ * Emitted when a client request is rejected.
+ * @event BaseClient#requestRejected
+ * @param {RequestError} error - The error object.
  */
 
 /**
@@ -75,8 +88,9 @@ const getBaseUri = (realm, type) => {
 
 /**
  * @classdesc The base API client.
+ * @extends EventEmitter
  */
-class BaseClient {
+class BaseClient extends EventEmitter {
   /**
    * Constructor.
    * @param {Object} options - The client options.
@@ -90,6 +104,8 @@ class BaseClient {
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor({ type, realm, applicationId, accessToken = null, language = null }) {
+    super();
+
     if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
       throw new TypeError('Must specify a valid realm for the client.');
     } else if (typeof applicationId !== 'string') {
@@ -234,6 +250,8 @@ class BaseClient {
    * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
    *   returned API data, or rejecting with an error.
    * @throws {TypeError} Thrown if any parameters are not the right type.
+   * @fires BaseClient#requestFulfilled
+   * @fires BaseClient#requestRejected
    * @private
    */
   request(apiMethod, params = {}, options = {}) {
@@ -276,29 +294,38 @@ class BaseClient {
         });
       }
 
-      return new APIResponse({
+      const apiResponse = new APIResponse({
         client: this,
         requestRealm: normalizedRealm,
         url: response.req.url,
         method: normalizedApiMethod,
         response: response.body,
       });
+
+      this.emit('requestFulfilled', apiResponse);
+
+      return apiResponse;
     };
 
     const reject = (value) => {
       // check if this is a HTTP error or a Wargaming error
       if (value instanceof APIError) {
+        this.emit('requestRejected', value);
+
         throw value;
       }
 
       const { response: { error, req } } = value;
 
-      throw new RequestError({
+      const requestError = new RequestError({
         message: value.response.error.message,
         client: this,
         statusCode: error.status,
         url: req.url,
       });
+
+      this.emit('requestRejected', requestError);
+      throw requestError;
     };
 
     switch (method) {

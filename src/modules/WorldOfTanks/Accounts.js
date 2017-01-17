@@ -2,6 +2,7 @@ import ClientModule from '../ClientModule';
 
 /**
  * @classdesc Module for the World of Tanks Accounts endpoint.
+ * @extends ClientModule
  */
 class Accounts extends ClientModule {
   /**

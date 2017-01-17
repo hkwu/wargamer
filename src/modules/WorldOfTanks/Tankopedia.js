@@ -3,8 +3,21 @@ import ClientModule from '../ClientModule';
 
 /**
  * @classdesc Module for the World of Tanks Tankopedia endpoint.
+ * @extends ClientModule
  */
 class Tankopedia extends ClientModule {
+  /**
+   * The module's Fuse object.
+   * @type {Fuse}
+   * @private
+   */
+  fuse = new Fuse([], {
+    keys: [
+      'name',
+      'short_name',
+    ],
+  });
+
   /**
    * Constructor.
    * @param {BaseClient} client - The API client this module belongs to.
@@ -14,6 +27,19 @@ class Tankopedia extends ClientModule {
 
     this.createCache('meta', { cacheTTL: this.DEFAULT_CACHE_TTL });
     this.createCache('vehicles:names', { cacheTTL: this.DEFAULT_CACHE_TTL });
+
+    this.client.on('requestFulfilled', (response) => {
+      switch (response.method) { // eslint-disable-line default-case
+        case 'encyclopedia/info':
+          this.buildMetaCache(this.getCache('meta'), response);
+
+          break;
+        case 'encyclopedia/vehicles':
+          this.buildVehicleNamesCache(this.getCache('vehicles:names'), response);
+
+          break;
+      }
+    });
   }
 
   /**
@@ -36,7 +62,43 @@ class Tankopedia extends ClientModule {
         options,
       ).then(response => response.data[identifier]);
     } else if (typeof identifier === 'string') {
-      const cache = this.getCache('vehicles:names');
+      const cachedEntries = this.getCache('vehicles:names').get('entries');
+
+      if (!cachedEntries) {
+        return this.client.get(
+          'encyclopedia/vehicles', {
+            fields: [
+              'name',
+              'short_name',
+              'tank_id',
+            ],
+          },
+          options,
+        ).then((response) => {
+          const vehicles = response.data;
+
+          this.fuse.set(Object.keys(vehicles).reduce(
+            (accumulated, next) => [...accumulated, vehicles[next]],
+            [],
+          ));
+
+          const results = this.fuse.search(identifier);
+
+          if (!results.length) {
+            return Promise.resolve(null);
+          }
+
+          const [{ tank_id }] = results;
+
+          return this.client.get(
+            'encyclopedia/vehicles',
+            { tank_id },
+            options,
+          ).then(response => response.data[tank_id]);
+        });
+      }
+
+      // const cache = this.getCache('vehicles:names');
       const handleSearchResults = (results) => {
         if (!results.length) {
           return Promise.resolve(null);
@@ -50,18 +112,20 @@ class Tankopedia extends ClientModule {
           options,
         ).then(response => response.data[tank_id]);
       };
-
-      if (cache.empty) {
-        return this.buildVehicleNamesCache(cache).then((builtCache) => {
-          const results = builtCache.get('fuse').search(identifier);
-
-          return handleSearchResults(results);
-        });
-      }
-
-      const results = cache.get('fuse').search(identifier);
-
-      return handleSearchResults(results);
+      //
+      // if (cache.empty) {
+      //   return this.buildVehicleNamesCache(cache).then((builtCache) => {
+      //     this.fuse.set(builtCache.get('entries'));
+      //
+      //     const results = this.fuse.search(identifier);
+      //
+      //     return handleSearchResults(results);
+      //   });
+      // }
+      //
+      // const results = cache.get('fuse').search(identifier);
+      //
+      // return handleSearchResults(results);
     }
 
     throw new TypeError('Expected a string or number as the vehicle identifier.');
@@ -182,17 +246,11 @@ class Tankopedia extends ClientModule {
       ],
     }).then((response) => {
       const vehicles = response.data;
-      const entries = Object.keys(vehicles).reduce(
+
+      cache.set('entries', Object.keys(vehicles).reduce(
         (accumulated, next) => [...accumulated, vehicles[next]],
         [],
-      );
-
-      cache.set('fuse', new Fuse(entries, {
-        keys: [
-          'name',
-          'short_name',
-        ],
-      }));
+      ));
 
       return cache;
     });
