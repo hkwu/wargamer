@@ -36,7 +36,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "mocha --require babel-register --recursive",
-    "prepublishOnly": "npm run build && npm test",
+    "prepublishOnly": "npm test && npm run build && npm run build:umd",
     "postpublish": "npm run docs:publish",
     "docs:build": "docma -c docma.config.json --dest _gh_pages",
     "docs:prepublish": "npm run docs:build && cp CNAME _gh_pages/CNAME",
