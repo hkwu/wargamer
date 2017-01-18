@@ -65,7 +65,7 @@
     "eslint-loader": "^1.6.1",
     "eslint-plugin-import": "^2.2.0",
     "mocha": "^3.0.2",
-    "webpack": "beta",
+    "webpack": "^2.2.0",
     "webpack-merge": "^2.0.0"
   },
   "engines": {
