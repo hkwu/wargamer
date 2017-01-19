@@ -2,13 +2,6 @@ import { expect } from 'chai';
 import mapValues from '../../src/utils/mapValues';
 
 describe('mapValues()', function() {
-  it('creates a new object', function() {
-    const old = {};
-    const mapped = mapValues(old);
-
-    expect(old).to.not.equal(mapped);
-  });
-
   it('maps object values correctly', function() {
     expect(mapValues({})).to.deep.equal({});
 
@@ -21,5 +14,12 @@ describe('mapValues()', function() {
       foo: 'barbar',
       baz: 'quxqux',
     });
+  });
+
+  it('creates a new object', function() {
+    const old = {};
+    const mapped = mapValues(old);
+
+    expect(old).to.not.equal(mapped);
   });
 });

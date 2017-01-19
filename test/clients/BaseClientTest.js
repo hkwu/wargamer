@@ -212,7 +212,7 @@ describe('BaseClient', function() {
         return expect(accountListSearchBadApplicationId).to.eventually.be.instanceof(APIError);
       });
 
-      it('rejects with an INVALID_APPLICATION_ID error', function() {
+      it('rejects with an INVALID_APPLICATION_ID error when given a bad application ID', function() {
         return expect(accountListSearchBadApplicationId.then(error => error.apiMessage)).to.eventually.equal('INVALID_APPLICATION_ID');
       });
 
