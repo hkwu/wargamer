@@ -8,7 +8,6 @@ describe('APIResponse', function() {
     const data = {
       client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
       requestRealm: 'na',
-      url: 'http://httpbin.org/get',
       method: 'account/list',
       response: {
         data: [],
@@ -21,14 +20,13 @@ describe('APIResponse', function() {
     it('correctly constructs itself', function() {
       expect(apiResponse.client).to.equal(data.client);
       expect(apiResponse.requestRealm).to.equal(data.requestRealm);
-      expect(apiResponse.url).to.equal(data.url);
       expect(apiResponse.method).to.equal(data.method);
-      expect(apiResponse.response).to.deep.equal(data.response);
+      expect(apiResponse.body).to.deep.equal(data.body);
     });
 
     it('gets properties properly', function() {
-      expect(apiResponse.meta).to.equal(data.response.meta);
-      expect(apiResponse.data).to.equal(data.response.data);
+      expect(apiResponse.meta).to.equal(data.body.meta);
+      expect(apiResponse.data).to.equal(data.body.data);
     });
   });
 });
