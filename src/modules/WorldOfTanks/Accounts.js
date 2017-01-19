@@ -25,25 +25,30 @@ class Accounts extends ClientModule {
    *   by the `account/list` endpoint.
    * If `searchType` is `'exact'`, the resolved value is the matching player's ID,
    *   or `null` if no match was found.
-   * @throws {Error} Thrown if the given `searchType` is invalid.
    */
   findPlayerId(name, searchType = 'exact', options = {}) {
-    switch (searchType.toLowerCase()) {
-      case 'startswith':
-        return this.client.get(
-          'account/list',
-          { search: name },
-          options,
-        ).then(response => response.data);
-      case 'exact':
-        return this.client.get(
-          'account/list',
-          { search: name },
-          options,
-        ).then(response => (response.data[0] ? response.data[0].account_id : null));
-      default:
-        throw new Error('Invalid search type specified for player search.');
-    }
+    return new Promise((resolve) => {
+      switch (searchType.toLowerCase()) {
+        case 'startswith':
+          return resolve(
+            this.client.get(
+              'account/list',
+              { search: name },
+              options,
+            ).then(response => response.data),
+          );
+        case 'exact':
+          return resolve(
+            this.client.get(
+              'account/list',
+              { search: name },
+              options,
+            ).then(response => (response.data[0] ? response.data[0].account_id : null)),
+          );
+        default:
+          throw new Error('Invalid search type specified for player search.');
+      }
+    });
   }
 }
 

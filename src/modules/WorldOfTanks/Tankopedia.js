@@ -24,22 +24,6 @@ class Tankopedia extends ClientModule {
    */
   constructor(client) {
     super(client, 'tankopedia');
-
-    this.createCache('meta', { cacheTTL: this.DEFAULT_CACHE_TTL });
-    this.createCache('vehicles:names', { cacheTTL: this.DEFAULT_CACHE_TTL });
-
-    this.client.on('requestFulfilled', (response) => {
-      switch (response.method) { // eslint-disable-line default-case
-        case 'encyclopedia/info':
-          this.buildMetaCache(this.getCache('meta'), response);
-
-          break;
-        case 'encyclopedia/vehicles':
-          this.buildVehicleNamesCache(this.getCache('vehicles:names'), response);
-
-          break;
-      }
-    });
   }
 
   /**
@@ -52,7 +36,6 @@ class Tankopedia extends ClientModule {
    * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
    *   matched vehicle, or `null` if no vehicles were matched.
-   * @throws {TypeError} Thrown if the given identifier is not of the right type.
    */
   findVehicle(identifier, options = {}) {
     if (typeof identifier === 'number') {
@@ -62,46 +45,27 @@ class Tankopedia extends ClientModule {
         options,
       ).then(response => response.data[identifier]);
     } else if (typeof identifier === 'string') {
-      const cachedEntries = this.getCache('vehicles:names').get('entries');
+      return this.client.get(
+        'encyclopedia/vehicles', {
+          fields: [
+            'name',
+            'short_name',
+            'tank_id',
+          ],
+        },
+        options,
+      ).then((response) => {
+        const vehicles = response.data;
 
-      if (!cachedEntries) {
-        return this.client.get(
-          'encyclopedia/vehicles', {
-            fields: [
-              'name',
-              'short_name',
-              'tank_id',
-            ],
-          },
-          options,
-        ).then((response) => {
-          const vehicles = response.data;
+        this.fuse.set(Object.keys(vehicles).reduce(
+          (accumulated, next) => [...accumulated, vehicles[next]],
+          [],
+        ));
 
-          this.fuse.set(Object.keys(vehicles).reduce(
-            (accumulated, next) => [...accumulated, vehicles[next]],
-            [],
-          ));
+        const results = this.fuse.search(identifier);
 
-          const results = this.fuse.search(identifier);
-
-          if (!results.length) {
-            return Promise.resolve(null);
-          }
-
-          const [{ tank_id }] = results;
-
-          return this.client.get(
-            'encyclopedia/vehicles',
-            { tank_id },
-            options,
-          ).then(response => response.data[tank_id]);
-        });
-      }
-
-      // const cache = this.getCache('vehicles:names');
-      const handleSearchResults = (results) => {
         if (!results.length) {
-          return Promise.resolve(null);
+          return null;
         }
 
         const [{ tank_id }] = results;
@@ -110,25 +74,11 @@ class Tankopedia extends ClientModule {
           'encyclopedia/vehicles',
           { tank_id },
           options,
-        ).then(response => response.data[tank_id]);
-      };
-      //
-      // if (cache.empty) {
-      //   return this.buildVehicleNamesCache(cache).then((builtCache) => {
-      //     this.fuse.set(builtCache.get('entries'));
-      //
-      //     const results = this.fuse.search(identifier);
-      //
-      //     return handleSearchResults(results);
-      //   });
-      // }
-      //
-      // const results = cache.get('fuse').search(identifier);
-      //
-      // return handleSearchResults(results);
+        ).then(detailedResponse => detailedResponse.data[tank_id]);
+      });
     }
 
-    throw new TypeError('Expected a string or number as the vehicle identifier.');
+    return Promise.reject(new TypeError('Expected a string or number as the vehicle identifier.'));
   }
 
   /**
@@ -139,26 +89,15 @@ class Tankopedia extends ClientModule {
    *   translated slug, or `undefined` if it couldn't be translated.
    */
   translateSlug(type, slug) {
-    const cache = this.getCache('meta');
-    const handleTranslation = (translationMap) => {
+    return this.client.get('encyclopedia/info').then((response) => {
+      const translationMap = response.data[type];
+
       if (!translationMap || typeof translationMap !== 'object') {
-        return Promise.reject(Error(`Invalid translation type: ${type}.`));
+        throw new Error(`Invalid translation type: ${type}.`);
       }
 
-      return Promise.resolve(translationMap[slug]);
-    };
-
-    if (cache.empty) {
-      return this.buildMetaCache(cache).then((builtCache) => {
-        const translationMap = builtCache.get(type);
-
-        return handleTranslation(translationMap);
-      });
-    }
-
-    const translationMap = cache.get(type);
-
-    return handleTranslation(translationMap);
+      return translationMap[slug];
+    });
   }
 
   /**
@@ -213,47 +152,6 @@ class Tankopedia extends ClientModule {
    */
   translateVehicleNation(vehicleNationSlug) {
     return this.translateSlug('vehicle_nations', vehicleNationSlug);
-  }
-
-  /**
-   * Initializes a cache with Tankopedia meta data.
-   * @param {Cache} cache - The cache to use.
-   * @returns {Promise.<Cache, Error>} Promise resolving to the cache that was given.
-   * @private
-   */
-  buildMetaCache(cache) {
-    return this.client.get('encyclopedia/info').then((response) => {
-      Object.keys(response.data).forEach((key) => {
-        cache.set(key, response.data[key]);
-      });
-
-      return cache;
-    });
-  }
-
-  /**
-   * Initializes a cache with Tankopedia vehicle names.
-   * @param {Cache} cache - The cache to use.
-   * @returns {Promise.<Cache, Error>} Promise resolving to the cache that was given.
-   * @private
-   */
-  buildVehicleNamesCache(cache) {
-    return this.client.get('encyclopedia/vehicles', {
-      fields: [
-        'name',
-        'short_name',
-        'tank_id',
-      ],
-    }).then((response) => {
-      const vehicles = response.data;
-
-      cache.set('entries', Object.keys(vehicles).reduce(
-        (accumulated, next) => [...accumulated, vehicles[next]],
-        [],
-      ));
-
-      return cache;
-    });
   }
 }
 

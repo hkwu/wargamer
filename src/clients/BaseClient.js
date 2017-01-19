@@ -1,9 +1,11 @@
-import EventEmitter from 'events';
 import request from 'superagent';
 import APIError from '../errors/APIError';
 import APIResponse from '../responses/APIResponse';
+import Cache from '../cache/Cache';
 import RequestError from '../errors/RequestError';
+import hashCode from '../utils/hashCode';
 import mapValues from '../utils/mapValues';
+import sortObjectByKey from '../utils/sortObjectByKey';
 
 /**
  * The options available to use on a client constructor.
@@ -14,6 +16,8 @@ import mapValues from '../utils/mapValues';
  *   if it will be using one.
  * @param {string} [language=null] - The default localization language
  *   to use for API responses.
+ * @param {number} [options.cacheTimeToLive=600000] - The time to live in
+ *   milliseconds for the client's data cache entries.
  */
 
 /**
@@ -88,9 +92,8 @@ const getBaseUri = (realm, type) => {
 
 /**
  * @classdesc The base API client.
- * @extends EventEmitter
  */
-class BaseClient extends EventEmitter {
+class BaseClient {
   /**
    * Constructor.
    * @param {Object} options - The client options.
@@ -101,10 +104,19 @@ class BaseClient extends EventEmitter {
    *   client, if it will be using one.
    * @param {string} [options.language=null] - The default localization language
    *   to use for API responses.
+   * @param {number} [options.cacheTimeToLive=600000] - The time to live in
+   *   milliseconds for the client's data cache entries.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
-  constructor({ type, realm, applicationId, accessToken = null, language = null }) {
-    super();
+  constructor(options) {
+    const {
+      type,
+      realm,
+      applicationId,
+      accessToken = null,
+      language = null,
+      cacheTimeToLive = 600 * 1000,
+    } = options;
 
     if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
       throw new TypeError('Must specify a valid realm for the client.');
@@ -150,6 +162,13 @@ class BaseClient extends EventEmitter {
      * @private
      */
     this.baseUri = getBaseUri(normalizedRealm, type);
+
+    /**
+     * The API response cache.
+     * @type {Cache}
+     * @private
+     */
+    this.cache = new Cache({ timeToLive: cacheTimeToLive });
   }
 
   /**
@@ -176,7 +195,6 @@ class BaseClient extends EventEmitter {
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
    * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
    *   returned API data, or rejecting with an error.
-   * @throws {TypeError} Thrown if any parameters are not the right type.
    */
   get(method, params = {}, options = {}) {
     return this.request(method, params, { ...options, method: 'GET' });
@@ -189,7 +207,6 @@ class BaseClient extends EventEmitter {
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
    * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
    *   returned API data, or rejecting with an error.
-   * @throws {TypeError} Thrown if any parameters are not the right type.
    */
   post(method, params = {}, options = {}) {
     return this.request(method, params, { ...options, method: 'POST' });
@@ -249,101 +266,114 @@ class BaseClient extends EventEmitter {
    * @param {RequestOptions} [options={}] - Options used to override client defaults.
    * @returns {Promise.<APIResponse, Error>} Returns a promise resolving to the
    *   returned API data, or rejecting with an error.
-   * @throws {TypeError} Thrown if any parameters are not the right type.
-   * @fires BaseClient#requestFulfilled
-   * @fires BaseClient#requestRejected
    * @private
    */
   request(apiMethod, params = {}, options = {}) {
-    const { type = this.type, realm = this.realm, method = 'GET' } = options;
+    return new Promise((resolve) => {
+      const { type = this.type, realm = this.realm, method = 'GET' } = options;
 
-    if (typeof apiMethod !== 'string') {
-      throw new TypeError('Expected API method to be a string.');
-    }
+      if (typeof apiMethod !== 'string') {
+        throw new TypeError('Expected API method to be a string.');
+      }
 
-    const normalizedApiMethod = apiMethod.toLowerCase();
-    const normalizedRealm = realm.toLowerCase();
+      const normalizedApiMethod = apiMethod.toLowerCase();
+      const normalizedRealm = realm.toLowerCase();
 
-    // construct the request URL
-    const baseUrl = normalizedRealm === this.realm
-      ? this.baseUri
-      : getBaseUri(normalizedRealm, type);
-    const requestUrl = `${baseUrl}/${normalizedApiMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
+      // construct the request URL
+      const baseUrl = normalizedRealm === this.realm
+        ? this.baseUri
+        : getBaseUri(normalizedRealm, type);
+      const requestUrl = `${baseUrl}/${normalizedApiMethod.replace(/^\/*(.+?)\/*$/, '$1')}/`;
 
-    // construct the payload
-    const payload = {
-      application_id: this.applicationId,
-      access_token: this.accessToken,
-      language: this.language,
-      ...params,
-    };
+      // construct the payload
+      const payload = {
+        application_id: this.applicationId,
+        access_token: this.accessToken,
+        language: this.language,
+        ...params,
+      };
 
-    const normalizedPayload = mapValues(payload, this.constructor.normalizeParameterValue);
+      const normalizedPayload = mapValues(payload, this.constructor.normalizeParameterValue);
 
-    const fulfill = (response) => {
-      const { error = null } = response.body;
+      // compute information for the cache
+      const { application_id, ...rest } = normalizedPayload; // eslint-disable-line no-unused-vars
+      const cacheKey = hashCode(`${requestUrl}${JSON.stringify(sortObjectByKey(rest))}`);
 
-      if (error) {
-        // Wargaming API error
-        throw new APIError({
+      const fulfillResponse = (response) => {
+        const { error = null } = response.body;
+
+        if (error) {
+          // Wargaming API error
+          throw new APIError({
+            client: this,
+            statusCode: response.status,
+            method: normalizedApiMethod,
+            error,
+          });
+        }
+
+        return new APIResponse({
           client: this,
-          statusCode: response.status,
-          url: response.req.url,
+          requestRealm: normalizedRealm,
           method: normalizedApiMethod,
-          error,
+          body: response.body,
         });
-      }
+      };
 
-      const apiResponse = new APIResponse({
-        client: this,
-        requestRealm: normalizedRealm,
-        url: response.req.url,
-        method: normalizedApiMethod,
-        response: response.body,
-      });
+      const rejectResponse = (value) => {
+        // check if this is a HTTP error or a Wargaming error
+        if (value instanceof APIError) {
+          throw value;
+        }
 
-      this.emit('requestFulfilled', apiResponse);
+        const { response: { error, req } } = value;
 
-      return apiResponse;
-    };
+        throw new RequestError({
+          message: value.body.error.message,
+          client: this,
+          statusCode: error.status,
+          url: req.url,
+        });
+      };
 
-    const reject = (value) => {
-      // check if this is a HTTP error or a Wargaming error
-      if (value instanceof APIError) {
-        this.emit('requestRejected', value);
+      if (method === 'GET') {
+        const cached = this.cache.get(cacheKey);
 
-        throw value;
-      }
+        if (cached) {
+          const response = new APIResponse({
+            client: this,
+            requestRealm: normalizedRealm,
+            method: normalizedApiMethod,
+            body: cached,
+          });
 
-      const { response: { error, req } } = value;
+          resolve(response);
+        }
 
-      const requestError = new RequestError({
-        message: value.response.error.message,
-        client: this,
-        statusCode: error.status,
-        url: req.url,
-      });
-
-      this.emit('requestRejected', requestError);
-      throw requestError;
-    };
-
-    switch (method) {
-      case 'GET':
-        return request.get(requestUrl)
+        const promise = request.get(requestUrl)
           .query(normalizedPayload)
-          .then(fulfill)
-          .catch(reject);
-      case 'POST':
-        return request.post(requestUrl)
+          .then(fulfillResponse)
+          .then((apiResponse) => {
+            this.cache.set(cacheKey, apiResponse.body);
+
+            return apiResponse;
+          })
+          .catch(rejectResponse);
+
+        resolve(promise);
+      } else if (method === 'POST') {
+        const promise = request.post(requestUrl)
           .type('form')
           .send(normalizedPayload)
-          .then(fulfill)
-          .catch(reject);
-      default:
-        // we should never get here
-        return Promise.reject(new Error('Received invalid request method.'));
-    }
+          .then(fulfillResponse)
+          .catch(rejectResponse);
+
+        resolve(promise);
+      }
+
+      // we should never get here
+      throw new Error('Received invalid request method.');
+    });
   }
 }
 
