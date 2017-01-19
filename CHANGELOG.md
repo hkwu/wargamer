@@ -10,10 +10,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Default `language` option for client constructor.
 - Client modules (currently just for World of Tanks).
   - Separate components for each client with convenience methods associated with specific endpoints.
-- Caching system for client modules.
+- Caching system for requests.
 
 ### Changed
 - The World of Tanks Console client's factory method on the `Wargamer` class is now `WoTX()` instead of `WoTC()` in order to be consistent with the client slugs. The exported `WorldOfTanksConsole` client class remains the same.
+- Changed Babel preset browser environment setting to >4% usage.
+- `APIResponse#response` is now `APIResponse#body`.
+- Client methods that weren't entirely asynchronous have been rewritten to be 100% asynchronous.
+
+### Removed
+- `APIResponse#url` removed since it's not consistent with SuperAgent's response.
 
 ## [0.2.1] - 2017-01-09
 ### Changed
