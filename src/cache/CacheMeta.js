@@ -90,7 +90,6 @@ class CacheMeta {
 
     this.updatedAt = now;
     this.resetAt = now;
-    this.keys = 0;
     this.hits = 0;
     this.misses = 0;
 
@@ -107,7 +106,6 @@ class CacheMeta {
       accessedAt: this.accessedAt,
       updatedAt: this.updatedAt,
       resetAt: this.resetAt,
-      keys: this.keys,
       hits: this.hits,
       misses: this.misses,
       expired: this.expired,
