@@ -4,6 +4,7 @@
   "rules": {
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-prototype-builtins": "off",
-    "no-restricted-syntax": "warn"
+    "no-restricted-syntax": "warn",
+    "no-bitwise": "off"
   }
 }
