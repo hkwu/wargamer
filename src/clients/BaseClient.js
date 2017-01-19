@@ -16,8 +16,9 @@ import sortObjectByKey from '../utils/sortObjectByKey';
  *   if it will be using one.
  * @param {string} [language=null] - The default localization language
  *   to use for API responses.
- * @param {number} [options.cacheTimeToLive=600000] - The time to live in
- *   milliseconds for the client's data cache entries.
+ * @param {?number} [options.cacheTimeToLive=600000] - The time to live in
+ *   milliseconds for the client's data cache entries. `null` if no there is
+ *   no TTL.
  */
 
 /**
@@ -104,8 +105,9 @@ class BaseClient {
    *   client, if it will be using one.
    * @param {string} [options.language=null] - The default localization language
    *   to use for API responses.
-   * @param {number} [options.cacheTimeToLive=600000] - The time to live in
-   *   milliseconds for the client's data cache entries.
+   * @param {?number} [options.cacheTimeToLive=600000] - The time to live in
+   *   milliseconds for the client's data cache entries. `null` if no there is
+   *   no TTL.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor(options) {

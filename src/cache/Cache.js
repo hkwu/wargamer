@@ -5,7 +5,7 @@ import CacheMeta from './CacheMeta';
  * Options for the Cache constructor.
  * @typedef {Object} CacheOptions
  * @property {?number} [timeToLive=null] - The time to live in milliseconds for
- *   individual cache entries.
+ *   individual cache entries. `null` if there is no TTL.
  */
 
 /**
