@@ -38,7 +38,7 @@ describe('Tankopedia', function() {
     });
 
     it('throws for invalid identifier types', function() {
-      expect(() => client.tankopedia.findVehicle({})).to.throw(Error);
+      return expect(client.tankopedia.findVehicle({}).catch(error => error)).to.eventually.be.instanceof(Error);
     });
   });
 });

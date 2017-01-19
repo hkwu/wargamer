@@ -23,7 +23,7 @@ describe('Accounts', function() {
     });
 
     it('throws for invalid search types', function() {
-      expect(() => client.accounts.findPlayerId('salt', 'false')).to.throw(Error);
+      return expect(client.accounts.findPlayerId('salt', 'false').catch(error => error)).to.eventually.be.instanceof(Error);
     });
   });
 });
