@@ -9,7 +9,7 @@ describe('APIResponse', function() {
       client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
       requestRealm: 'na',
       method: 'account/list',
-      response: {
+      body: {
         data: [],
         meta: 'ok',
       },

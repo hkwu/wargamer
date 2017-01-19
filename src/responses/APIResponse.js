@@ -13,7 +13,7 @@ class APIResponse {
    *   this response data.
    * @param {Object} data.body - The parsed JSON data from the API.
    */
-  constructor({ client, requestRealm, method, response }) {
+  constructor({ client, requestRealm, method, body }) {
     /**
      * The API client that the response originated from.
      * @type {BaseClient}
@@ -36,7 +36,7 @@ class APIResponse {
      * The response's parsed JSON data.
      * @type {Object}
      */
-    this.body = response;
+    this.body = body;
   }
 
   /**
