@@ -12,7 +12,7 @@ export default function hashCode(string) {
   }
 
   for (let i = 0; i < string.length; ++i) {
-    const char = string.charAt(i);
+    const char = string.charCodeAt(i);
 
     hash = ((hash << 5) - hash) + char;
     hash &= hash;
