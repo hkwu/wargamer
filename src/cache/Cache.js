@@ -4,10 +4,8 @@ import CacheMeta from './CacheMeta';
 /**
  * Options for the Cache constructor.
  * @typedef {Object} CacheOptions
- * @property {?number} [entryTTL=null] - The time to live in milliseconds for
+ * @property {?number} [timeToLive=null] - The time to live in milliseconds for
  *   individual cache entries.
- * @property {?number} [cacheTTL=null] - The time to live in milliseconds for
- *   the entire cache.
  */
 
 /**
@@ -19,21 +17,14 @@ class Cache {
    * @param {CacheOptions} [options={}] - The options for the cache.
    */
   constructor(options = {}) {
-    const { entryTTL = null, cacheTTL = null } = options;
+    const { timeToLive = null } = options;
 
     /**
      * The TTL for cache entries in milliseconds. `null` if there is no TTL.
      * @type {?number}
      * @private
      */
-    this.entryTimeToLive = entryTTL;
-
-    /**
-     * The TTL for the entire cache in milliseconds. `null` if there is no TTL.
-     * @type {?number}
-     * @private
-     */
-    this.cacheTimeToLive = cacheTTL;
+    this.entryTimeToLive = timeToLive;
 
     /**
      * The metadata store for the cache.
@@ -64,8 +55,6 @@ class Cache {
    * @type {boolean}
    */
   get empty() {
-    this.expiredCheck();
-
     return this.size === 0;
   }
 
@@ -81,33 +70,19 @@ class Cache {
   }
 
   /**
-   * Whether or not the cache contents have exceeded their time to live.
-   * @type {boolean}
-   */
-  get expired() {
-    if (!this.cacheTimeToLive) {
-      return false;
-    }
-
-    const now = new Date();
-    const then = this.meta.resetAt || this.meta.createdAt;
-
-    return now.getTime() - then.getTime() >= this.cacheTimeToLive;
-  }
-
-  /**
    * Gets a value from the cache.
    * @param {string} key - The key of the data to get.
    * @returns {*} The cached value, or `undefined` if not found.
    */
   get(key) {
-    this.expiredCheck();
-
     const got = this.store.get(key);
 
-    if (!got || got.expired) {
-      this.meta.miss().expire();
-      this.store.delete(key);
+    if (!got) {
+      this.meta.miss();
+
+      return undefined;
+    } else if (got.expired) {
+      this.meta.expire();
 
       return undefined;
     }
@@ -125,8 +100,6 @@ class Cache {
    * @returns {Cache} The instance this method was called on.
    */
   set(key, value) {
-    this.expiredCheck();
-
     const entry = new CacheEntry({ value, timeToLive: this.entryTimeToLive });
 
     this.store.set(key, entry);
@@ -140,9 +113,7 @@ class Cache {
    * @returns {Cache} The instance this method was called on.
    */
   delete(key) {
-    if (!this.expiredCheck()) {
-      this.store.delete(key);
-    }
+    this.store.delete(key);
 
     return this;
   }
@@ -152,8 +123,6 @@ class Cache {
    * @returns {Array.<string>} The keys in the cache.
    */
   keys() {
-    this.expiredCheck();
-
     return [...this.store.keys()];
   }
 
@@ -166,22 +135,6 @@ class Cache {
     this.meta.reset();
 
     return this;
-  }
-
-  /**
-   * Checks if the cache contents have exceeded their time to live. If so, resets
-   *   the cache.
-   * @returns {boolean} `true` if the cache was reset, else `false`.
-   * @private
-   */
-  expiredCheck() {
-    if (this.expired) {
-      this.clear();
-
-      return true;
-    }
-
-    return false;
   }
 }
 
