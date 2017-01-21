@@ -61,21 +61,6 @@ describe('BaseClient', function() {
     });
   });
 
-  describe('.normalizeParameterValue()', function() {
-    it('normalizes arrays', function() {
-      expect(BaseClient.normalizeParameterValue([1, 2, 3])).to.equal('1,2,3');
-      expect(BaseClient.normalizeParameterValue(['str', 'str', 'str'])).to.equal('str,str,str');
-    });
-
-    it('normalizes Date objects', function() {
-      const now = new Date();
-      expect(BaseClient.normalizeParameterValue(now)).to.equal(now.toISOString());
-
-      const then = new Date(now.getFullYear() - 1, now.getMonth() - 1);
-      expect(BaseClient.normalizeParameterValue(then)).to.equal(then.toISOString());
-    });
-  });
-
   describe('#renewAccessToken()', function() {
     before(function() {
       chai.use(chaiAsPromised);
