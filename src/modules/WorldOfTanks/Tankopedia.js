@@ -7,23 +7,23 @@ import ClientModule from '../ClientModule';
  */
 class Tankopedia extends ClientModule {
   /**
-   * The module's Fuse object.
-   * @type {Fuse}
-   * @private
-   */
-  fuse = new Fuse([], {
-    keys: [
-      'name',
-      'short_name',
-    ],
-  });
-
-  /**
    * Constructor.
    * @param {BaseClient} client - The API client this module belongs to.
    */
   constructor(client) {
     super(client, 'tankopedia');
+
+    /**
+     * The module's Fuse object.
+     * @type {Fuse}
+     * @private
+     */
+    this.fuse = new Fuse([], {
+      keys: [
+        'name',
+        'short_name',
+      ],
+    });
   }
 
   /**

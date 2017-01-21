@@ -2,15 +2,11 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": [
-          "> 4%"
-        ],
         "node": 4
       }
     }]
   ],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-class-properties"
+    "transform-object-rest-spread"
   ]
 }
