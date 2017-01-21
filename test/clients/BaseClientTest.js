@@ -61,42 +61,6 @@ describe('BaseClient', function() {
     });
   });
 
-  describe('#renewAccessToken()', function() {
-    before(function() {
-      chai.use(chaiAsPromised);
-    });
-
-    describe('rejection', function() {
-      const client = new BaseClient({
-        type: 'wot',
-        realm: 'na',
-        applicationId: process.env.APPLICATION_ID,
-      });
-
-      it('rejects when client access token is not set', function() {
-        return expect(client.renewAccessToken().catch(error => error)).to.eventually.be.instanceof(Error);
-      });
-    });
-  });
-
-  describe('#destroyAccessToken()', function() {
-    before(function() {
-      chai.use(chaiAsPromised);
-    });
-
-    describe('rejection', function() {
-      const client = new BaseClient({
-        type: 'wot',
-        realm: 'na',
-        applicationId: process.env.APPLICATION_ID,
-      });
-
-      it('rejects when client access token is not set', function() {
-        return expect(client.destroyAccessToken().catch(error => error)).to.eventually.be.instanceof(Error);
-      });
-    });
-  });
-
   describe('#request()', function() {
     before(function() {
       chai.use(chaiAsPromised);
