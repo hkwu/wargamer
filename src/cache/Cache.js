@@ -68,7 +68,7 @@ class Cache {
 
   /**
    * The metadata for the cache.
-   * @type {Object} The cache metadata.
+   * @type {Object}
    */
   get statistics() {
     return {

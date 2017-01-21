@@ -40,7 +40,7 @@ class CacheEntry {
 
   /**
    * Whether or not this entry has exceeded its time to live.
-   * @type {boolean} `true` if the entry's TTL has expired, else `false`.
+   * @type {boolean}
    */
   get expired() {
     if (!this.entryTimeToLive) {
