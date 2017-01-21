@@ -4,7 +4,7 @@ node_js:
 - 6
 - 5
 - 4
-- 4.0.0
+- 4.3
 sudo: false
 env:
 - CXX=g++-4.8
@@ -17,6 +17,3 @@ addons:
 before_install:
 - openssl aes-256-cbc -K $encrypted_73ea1dbf79ec_key -iv $encrypted_73ea1dbf79ec_iv
   -in .env.enc -out .env -d
-install:
-- yarn --production
-- yarn add --dev babel-register
