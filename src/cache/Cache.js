@@ -50,6 +50,14 @@ class Cache {
   }
 
   /**
+   * The keys in the cache.
+   * @type {Array.<string>}
+   */
+  get keys() {
+    return [...this.store.keys()];
+  }
+
+  /**
    * `true` if the cache has no keys stored, else `false`. Prunes expired keys
    *   before returning the result.
    * @type {boolean}
@@ -119,20 +127,12 @@ class Cache {
   }
 
   /**
-   * Returns an array of the keys in the cache.
-   * @returns {Array.<string>} The keys in the cache.
-   */
-  keys() {
-    return [...this.store.keys()];
-  }
-
-  /**
    * Clears the entries in the cache.
    * @returns {Cache} The instance this method was called on.
    */
   clear() {
     this.store.clear();
-    this.meta.reset();
+    this.meta.clear();
 
     return this;
   }
