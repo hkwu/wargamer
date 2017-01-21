@@ -28,7 +28,7 @@ class CacheMeta {
      * The time this cache was last reset. `null` if the cache was never reset.
      * @type {?Date}
      */
-    this.resetAt = null;
+    this.clearedAt = null;
 
     /**
      * The number of hits on the cache.
@@ -85,13 +85,14 @@ class CacheMeta {
    * Resets the current tracked metadata.
    * @returns {CacheMeta} The instance this method was called on.
    */
-  reset() {
+  clear() {
     const now = new Date();
 
     this.updatedAt = now;
-    this.resetAt = now;
+    this.clearedAt = now;
     this.hits = 0;
     this.misses = 0;
+    this.expired = 0;
 
     return this;
   }
@@ -105,7 +106,7 @@ class CacheMeta {
       createdAt: this.createdAt,
       accessedAt: this.accessedAt,
       updatedAt: this.updatedAt,
-      resetAt: this.resetAt,
+      clearedAt: this.clearedAt,
       hits: this.hits,
       misses: this.misses,
       expired: this.expired,
