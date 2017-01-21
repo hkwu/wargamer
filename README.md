@@ -36,7 +36,7 @@ Web bundles are available as well.
 ```
 
 The web distribution is hosted by the following CDNs:
-- [unpkg](https://unpkg.com/#/) - files are located under `dist/` (e.g. `dist/wargamer.min.js`).
+- [unpkg](https://unpkg.com/#/) - files are located under `dist` (e.g. `dist/wargamer.min.js`).
 - [jsDelivr](https://www.jsdelivr.com/) - see the library's [project entry](https://www.jsdelivr.com/projects/wargamer).
 
 ## Usage
@@ -51,7 +51,8 @@ wot.get('account/list', { search: 'Straik' })
   .then((response) => {
     console.log(response.meta); // { count: 100 }
     console.log(response.data); // [{ nickname: 'Straik', account_id: 73892 }, ...]
-  }).catch((error) => {
+  })
+  .catch((error) => {
     console.log(error.message);
   });
 ```
