@@ -1,6 +1,7 @@
 import request from 'superagent';
 import APIError from '../errors/APIError';
 import APIResponse from '../responses/APIResponse';
+import Authentication from '../modules/common/Authentication';
 import Cache from '../cache/Cache';
 import RequestError from '../errors/RequestError';
 import hashCode from '../utils/hashCode';
@@ -159,6 +160,12 @@ class BaseClient {
     this.language = language;
 
     /**
+     * The client's Authentication module.
+     * @type {Authentication}
+     */
+    this.authentication = new Authentication(this);
+
+    /**
      * The base API URI for this client.
      * @type {string}
      * @private
@@ -212,53 +219,6 @@ class BaseClient {
    */
   post(method, params = {}, options = {}) {
     return this.request(method, params, { ...options, method: 'POST' });
-  }
-
-  /**
-   * Sends a request to renew the client's access token. Upon a successful
-   *   request, the client's current access token will be updated with the
-   *   returned token.
-   * @param {RequestOptions} [options={}] - The options for the request.
-   * @returns {Promise.<APIResponse, Error>} Returns the same value as a normal
-   *   request if the client's access token is defined, else rejects with a
-   *   plain `Error`.
-   */
-  renewAccessToken(options = {}) {
-    if (!this.accessToken) {
-      return Promise.reject(new Error('Failed to renew access token: client\'s access token is not set.'));
-    }
-
-    return this.post('auth/prolongate', {}, {
-      ...options,
-      type: this.type === 'wotx' ? 'wotx' : 'wot',
-    }).then((response) => {
-      this.accessToken = response.data.access_token;
-
-      return response;
-    });
-  }
-
-  /**
-   * Sends a request to invalidate the client's access token. Upon a successful
-   *   request, the client's current access token will be set to `null`.
-   * @param {RequestOptions} [options={}] - The options for the request.
-   * @returns {Promise.<APIResponse, Error>} Returns the same value as a normal
-   *   request if the client's access token is defined, else rejects with a
-   *   plain `Error`.
-   */
-  destroyAccessToken(options = {}) {
-    if (!this.accessToken) {
-      return Promise.reject(new Error('Failed to invalidate access token: client\'s access token is not set.'));
-    }
-
-    return this.post('auth/logout', {}, {
-      ...options,
-      type: this.type === 'wotx' ? 'wotx' : 'wot',
-    }).then((response) => {
-      this.accessToken = null;
-
-      return response;
-    });
   }
 
   /**
