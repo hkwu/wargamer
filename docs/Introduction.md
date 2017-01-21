@@ -49,6 +49,9 @@ On error, the promise will reject. However, the value that the promise rejects w
 - If the request did not reach the API correctly, the promise rejects with a [RequestError](?api#RequestError).
 - If the request reached the API and was then rejected, the promise rejects with an [APIError](?api#APIError).
 
+> #### Note about caching
+> Wargamer client requests are automatically cached in order to improve performance, but this only applies to `GET` requests. `POST` requests are not cached.
+
 ### Sending Parameters
 The second parameter in the request methods is the parameter payload to send to the API method. Keys in the parameters object will be merged automatically with the client's application ID on each request, so you don't need to specify it each time. Similarly, the client's access token (if one was provided) will also be merged in.
 
