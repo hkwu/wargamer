@@ -1,9 +1,17 @@
 {
   "src": [
-    "src/**/*.js",
-    "!src/index.js",
-    "README.md",
-    "docs/*.md"
+    {
+      "modules-common": [
+        "./src/modules/common/*.js"
+      ],
+      "modules-wot": [
+        "./src/modules/WorldOfTanks/*.js"
+      ]
+    },
+    "./src/**/*.js",
+    "!./src/index.js",
+    "./README.md",
+    "./docs/*.md"
   ],
   "jsdoc": {
     "undocumented": false
@@ -11,10 +19,6 @@
   "app": {
     "title": "Wargamer",
     "entrance": "content:readme",
-    "routing": {
-      "method": "query",
-      "caseSensitive": false
-    },
     "server": "github"
   },
   "template": {
@@ -37,6 +41,10 @@
             {
               "label": "Introduction",
               "href": "?content=introduction"
+            },
+            {
+              "label": "Modules",
+              "href": "?content=modules"
             }
           ]
         },
