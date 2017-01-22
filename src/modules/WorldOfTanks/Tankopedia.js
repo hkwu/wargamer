@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
+import localize from '../mixins/localize';
 
 /**
  * @classdesc Module for the World of Tanks Tankopedia endpoint.
@@ -88,76 +89,54 @@ class Tankopedia extends ClientModule {
   }
 
   /**
-   * Translates a given slug value using one of the mappings returned from the API.
-   * @param {string} type - The type of translation to perform.
-   * @param {string} slug - The slug to translate.
+   * Localizes a crew role slug.
+   * @param {string} slug - The slug.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  translateSlug(type, slug) {
-    return this.client.get('encyclopedia/info').then((response) => {
-      const translationMap = response.data[type];
-
-      if (!translationMap || typeof translationMap !== 'object') {
-        throw new Error(`Invalid translation type: ${type}.`);
-      }
-
-      return translationMap[slug];
-    });
+  localizeCrewRole(slug) {
+    return localize.call(this, 'encyclopedia/info', 'vehicle_crew_roles', slug);
   }
 
   /**
-   * Translates a crew role slug.
-   * @param {string} roleSlug - The slug.
+   * Localizes a language slug.
+   * @param {string} slug - The slug.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  translateCrewRole(roleSlug) {
-    return this.translateSlug('vehicle_crew_roles', roleSlug);
+  localizeLanguage(slug) {
+    return localize.call(this, 'encyclopedia/info', 'languages', slug);
   }
 
   /**
-   * Translates a language slug.
-   * @param {string} languageSlug - The slug.
-   * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
-   *   translated slug, or `undefined` if it couldn't be translated.
-   */
-  translateLanguage(languageSlug) {
-    return this.translateSlug('languages', languageSlug);
-  }
-
-  /**
-   * Translates an achievement section slug. The returned value is the section's
+   * Localizes an achievement section slug. The returned value is the section's
    *   name.
-   * @param {string} achievementSectionSlug - The slug.
+   * @param {string} slug - The slug.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  translateAchievementSection(achievementSectionSlug) {
-    return this.translateSlug(
-      'achievement_sections',
-      achievementSectionSlug,
-    ).then(section => section && section.name);
+  localizeAchievementSection(slug) {
+    return localize.call(this, 'encyclopedia/info', 'achievement_sections', slug).then(section => section && section.name);
   }
 
   /**
-   * Translates a vehicle type slug.
-   * @param {string} vehicleTypeSlug - The slug.
+   * Localizes a vehicle type slug.
+   * @param {string} slug - The slug.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  translateVehicleType(vehicleTypeSlug) {
-    return this.translateSlug('vehicle_types', vehicleTypeSlug);
+  localizeVehicleType(slug) {
+    return localize.call(this, 'encyclopedia/info', 'vehicle_types', slug);
   }
 
   /**
-   * Translates a vehicle nation slug.
-   * @param {string} vehicleNationSlug - The slug.
+   * Localizes a vehicle nation slug.
+   * @param {string} slug - The slug.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  translateVehicleNation(vehicleNationSlug) {
-    return this.translateSlug('vehicle_nations', vehicleNationSlug);
+  localizeVehicleNation(slug) {
+    return localize.call(this, 'encyclopedia/info', 'vehicle_nations', slug);
   }
 }
 
