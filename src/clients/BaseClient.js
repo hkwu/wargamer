@@ -29,8 +29,6 @@ import sortObjectByKey from '../utils/sortObjectByKey';
  *   `wotb`, `wotx`, `wows`, `wowp`, `wgn`.
  * @property {string} [realm] - The realm/region to use for the request.
  *   One of: `ru`, `eu`, `na`, `kr`, `asia`, `xbox`, `ps4`.
- * @property {string} [language] - The localization language to use for the
- *   request results. Check the API reference for valid languages.
  */
 
 /**
