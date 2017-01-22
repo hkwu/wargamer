@@ -4,18 +4,19 @@ import chaiAsPromised from 'chai-as-promised';
 import WorldOfTanks from '../../../src/clients/WorldOfTanks';
 
 describe('Tankopedia', function() {
+  const client = new WorldOfTanks({
+    realm: 'na',
+    applicationId: process.env.APPLICATION_ID,
+  });
+
+  // need to wait quite a bit when the API response is not cached
+  this.timeout(5000);
+
   before(function() {
     chai.use(chaiAsPromised);
   });
 
   describe('#findVehicle()', function() {
-    const client = new WorldOfTanks({
-      realm: 'na',
-      applicationId: process.env.APPLICATION_ID,
-    });
-
-    // need to wait quite a bit when the API response is not cached
-    this.timeout(5000);
 
     it('finds vehicles by ID', function() {
       return expect(client.tankopedia.findVehicle(6673)).to.eventually.have.property('name', 'Marder II');
@@ -39,6 +40,36 @@ describe('Tankopedia', function() {
 
     it('throws for invalid identifier types', function() {
       return expect(client.tankopedia.findVehicle({}).catch(error => error)).to.eventually.be.instanceof(Error);
+    });
+  });
+
+  describe('#localizeCrewRole()', function() {
+    it('localizes crew roles', function() {
+      return expect(client.tankopedia.localizeCrewRole('radioman')).to.eventually.equal('Radio Operator');
+    });
+  });
+
+  describe('#localizeLanguage()', function() {
+    it('localizes languages', function() {
+      return expect(client.tankopedia.localizeLanguage('zh-tw')).to.eventually.equal('繁體中文');
+    });
+  });
+
+  describe('#localizeAchievementSection()', function() {
+    it('localizes achievement sections', function() {
+      return expect(client.tankopedia.localizeAchievementSection('memorial')).to.eventually.equal('Commemorative Tokens');
+    });
+  });
+
+  describe('#localizeVehicleType()', function() {
+    it('localizes vehicle types', function() {
+      return expect(client.tankopedia.localizeVehicleType('AT-SPG')).to.eventually.equal('Tank Destroyer');
+    });
+  });
+
+  describe('#localizeVehicleNation()', function() {
+    it('localizes vehicle types', function() {
+      return expect(client.tankopedia.localizeVehicleNation('czech')).to.eventually.equal('Czechoslovakia');
     });
   });
 });
