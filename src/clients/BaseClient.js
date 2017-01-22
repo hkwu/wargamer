@@ -32,18 +32,6 @@ import sortObjectByKey from '../utils/sortObjectByKey';
  */
 
 /**
- * Emitted when a client request is successful.
- * @event BaseClient#requestFulfilled
- * @param {APIResponse} response - The response object.
- */
-
-/**
- * Emitted when a client request is rejected.
- * @event BaseClient#requestRejected
- * @param {RequestError} error - The error object.
- */
-
-/**
  * Mapping between realms and their TLDs.
  * @type {Object}
  * @constant
