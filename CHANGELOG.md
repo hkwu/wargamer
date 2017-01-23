@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+## [0.3.1] - 2017-01-22
+No changes from previous release. Just a patch for npm.
 
 ## [0.3.0] - 2017-01-22
 ### Added
@@ -62,7 +64,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Unit tests and continuous integration.
 - Documentation build process.
 
-[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.3.1...HEAD
+[0.3.0]: https://github.com/hkwu/wargamer/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hkwu/wargamer/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/hkwu/wargamer/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/hkwu/wargamer/compare/v0.1.2...v0.2.0
