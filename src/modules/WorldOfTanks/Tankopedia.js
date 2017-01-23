@@ -31,8 +31,9 @@ class Tankopedia extends ClientModule {
    * Searches for a vehicle by name or ID and returns its entry from the
    *   `encyclopedia/vehicles` endpoint.
    * @param {(number|string)} identifier - The vehicle identifier to use for
-   *   lookup. If a number is supplied, it is treated as the vehicle's ID.
-   *   If a string is supplied, the identifier is matched against vehicle names
+   *   lookup.
+   * If a number is supplied, it is treated as the vehicle's ID.
+   * If a string is supplied, the identifier is matched against vehicle names
    *   with the closest match being selected.
    * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<?Object, Error>} A promise resolving to the data for the

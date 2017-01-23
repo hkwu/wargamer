@@ -17,7 +17,6 @@ describe('Tankopedia', function() {
   });
 
   describe('#findVehicle()', function() {
-
     it('finds vehicles by ID', function() {
       return expect(client.tankopedia.findVehicle(6673)).to.eventually.have.property('name', 'Marder II');
     });
