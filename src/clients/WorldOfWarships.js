@@ -1,4 +1,5 @@
 import BaseClient from './BaseClient';
+import Encyclopedia from '../modules/WorldOfWarships/Encyclopedia';
 
 /**
  * @classdesc The World of Warships API client.
@@ -11,6 +12,12 @@ class WorldOfWarships extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wows' });
+
+    /**
+     * The client's Encyclopedia module.
+     * @type {Encyclopedia}
+     */
+    this.encyclopedia = new Encyclopedia(this);
   }
 }
 
