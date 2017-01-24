@@ -1,4 +1,5 @@
 import BaseClient from './BaseClient';
+import Encyclopedia from '../modules/WorldOfWarplanes/Encyclopedia';
 
 /**
  * @classdesc The World of Warplanes API client.
@@ -11,6 +12,12 @@ class WorldOfWarplanes extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wowp' });
+
+    /**
+     * The client's Encyclopedia module.
+     * @type {Encyclopedia}
+     */
+    this.encyclopedia = new Encyclopedia(this);
   }
 }
 
