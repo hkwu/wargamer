@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import CacheMeta from '../../src/cache/CacheMeta';
 
-describe('CacheMeta', function() {
-  describe('#hit()', function() {
-    it('records a cache hit', function() {
+describe('CacheMeta', function () {
+  describe('#hit()', function () {
+    it('records a cache hit', function () {
       const meta = new CacheMeta();
 
       expect(meta.hits).to.equal(0);
@@ -13,7 +13,7 @@ describe('CacheMeta', function() {
       expect(meta.hits).to.equal(1);
     });
 
-    it('updates accessed date', function() {
+    it('updates accessed date', function () {
       const meta = new CacheMeta();
       const now = new Date();
 
@@ -25,8 +25,8 @@ describe('CacheMeta', function() {
     });
   });
 
-  describe('#miss()', function() {
-    it('records a cache miss', function() {
+  describe('#miss()', function () {
+    it('records a cache miss', function () {
       const meta = new CacheMeta();
 
       expect(meta.misses).to.equal(0);
@@ -36,7 +36,7 @@ describe('CacheMeta', function() {
       expect(meta.misses).to.equal(1);
     });
 
-    it('updates accessed date', function() {
+    it('updates accessed date', function () {
       const meta = new CacheMeta();
       const now = new Date();
 
@@ -48,8 +48,8 @@ describe('CacheMeta', function() {
     });
   });
 
-  describe('#expire()', function() {
-    it('records a cache expiry', function() {
+  describe('#expire()', function () {
+    it('records a cache expiry', function () {
       const meta = new CacheMeta();
 
       expect(meta.expired).to.equal(0);
@@ -60,8 +60,8 @@ describe('CacheMeta', function() {
     });
   });
 
-  describe('#clear()', function() {
-    it('resets the resettable metadata', function() {
+  describe('#clear()', function () {
+    it('resets the resettable metadata', function () {
       const meta = new CacheMeta();
       const createdAt = meta.createdAt;
       const now = new Date();
@@ -89,8 +89,8 @@ describe('CacheMeta', function() {
     });
   });
 
-  describe('#serialize()', function() {
-    it('returns the serialized metadata', function() {
+  describe('#serialize()', function () {
+    it('returns the serialized metadata', function () {
       const meta = new CacheMeta();
 
       expect(meta.serialize()).to.deep.equal({

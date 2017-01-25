@@ -8,8 +8,8 @@ import WorldOfWarships from '../src/clients/WorldOfWarships';
 import WorldOfWarplanes from '../src/clients/WorldOfWarplanes';
 import Wargaming from '../src/clients/Wargaming';
 
-describe('Wargamer', function() {
-  it('correctly constructs clients', function() {
+describe('Wargamer', function () {
+  it('correctly constructs clients', function () {
     const options = { realm: 'na', applicationId: process.env.APPLICATION_ID };
 
     expect(Wargamer.WoT(options)).to.be.instanceof(WorldOfTanks);

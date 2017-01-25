@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import APIError from '../../src/errors/APIError';
 import WorldOfTanks from '../../src/clients/WorldOfTanks';
 
-describe('APIError', function() {
-  describe('#constructor()', function() {
-    it('correctly constructs itself', function() {
+describe('APIError', function () {
+  describe('#constructor()', function () {
+    it('correctly constructs itself', function () {
       const options = {
         client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
         statusCode: 200,

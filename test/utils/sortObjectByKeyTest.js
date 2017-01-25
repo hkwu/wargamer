@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import sortObjectByKey from '../../src/utils/sortObjectByKey';
 
-describe('sortObjectByKey()', function() {
-  it('sorts object keys', function() {
+describe('sortObjectByKey()', function () {
+  it('sorts object keys', function () {
     expect(JSON.stringify(sortObjectByKey({
       foo: 'bar',
       baz: 'qux',
@@ -12,7 +12,7 @@ describe('sortObjectByKey()', function() {
     }));
   });
 
-  it('produces a new object', function() {
+  it('produces a new object', function () {
     const object = {};
 
     expect(sortObjectByKey(object)).to.not.equal(object);

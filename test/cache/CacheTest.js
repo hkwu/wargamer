@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import Cache from '../../src/cache/Cache';
 
-describe('Cache', function() {
-  describe('#size', function() {
-    it('correctly gets the cache size', function() {
+describe('Cache', function () {
+  describe('#size', function () {
+    it('correctly gets the cache size', function () {
       const cache = new Cache();
 
       expect(cache.size).to.equal(0);
@@ -14,8 +14,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#keys', function() {
-    it ('correctly gets the keys in the cache', function() {
+  describe('#keys', function () {
+    it ('correctly gets the keys in the cache', function () {
       const cache = new Cache();
 
       expect(cache.keys).to.deep.equal([]);
@@ -30,8 +30,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#empty', function() {
-    it('correctly determines if the cache is empty or not', function() {
+  describe('#empty', function () {
+    it('correctly determines if the cache is empty or not', function () {
       const cache = new Cache();
 
       expect(cache.empty).to.be.true;
@@ -42,8 +42,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#statistics', function() {
-    it('gets statistics correctly', function() {
+  describe('#statistics', function () {
+    it('gets statistics correctly', function () {
       const now = new Date();
       const cache = new Cache();
       const { createdAt, ...rest } = cache.statistics;
@@ -61,8 +61,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#get()', function() {
-    it('returns cached keys', function() {
+  describe('#get()', function () {
+    it('returns cached keys', function () {
       const cache = new Cache();
 
       cache.set('foo', 23);
@@ -70,13 +70,13 @@ describe('Cache', function() {
       expect(cache.get('foo')).to.equal(23);
     });
 
-    it('returns undefined for non-cached keys', function() {
+    it('returns undefined for non-cached keys', function () {
       const cache = new Cache();
 
       expect(cache.get('foo')).to.be.undefined;
     });
 
-    it('returns undefined for expired keys', function(done) {
+    it('returns undefined for expired keys', function (done) {
       const cache = new Cache({ timeToLive: 1 });
 
       cache.set('foo', 'bar');
@@ -87,7 +87,7 @@ describe('Cache', function() {
       }, 2);
     });
 
-    it('updates the cache meta for a hit', function() {
+    it('updates the cache meta for a hit', function () {
       const cache = new Cache();
 
       cache.set('foo', 23);
@@ -96,7 +96,7 @@ describe('Cache', function() {
       expect(cache.statistics.hits).to.equal(1);
     });
 
-    it('updates the cache meta for a miss', function() {
+    it('updates the cache meta for a miss', function () {
       const cache = new Cache();
 
       cache.get('foo');
@@ -104,7 +104,7 @@ describe('Cache', function() {
       expect(cache.statistics.misses).to.equal(1);
     });
 
-    it('updates the cache meta for an expired key', function(done) {
+    it('updates the cache meta for an expired key', function (done) {
       const cache = new Cache({ timeToLive: 1 });
 
       cache.set('foo', 'bar');
@@ -117,8 +117,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#set()', function() {
-    it('sets a key', function() {
+  describe('#set()', function () {
+    it('sets a key', function () {
       const cache = new Cache();
 
       cache.set('foo', 'bar');
@@ -127,8 +127,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#delete()', function() {
-    it('deletes a key', function() {
+  describe('#delete()', function () {
+    it('deletes a key', function () {
       const cache = new Cache();
 
       cache.set('foo', 'bar');
@@ -141,8 +141,8 @@ describe('Cache', function() {
     });
   });
 
-  describe('#clear()', function() {
-    it('clears the data in the cache', function() {
+  describe('#clear()', function () {
+    it('clears the data in the cache', function () {
       const cache = new Cache();
 
       cache.set('foo', 23);
@@ -158,7 +158,7 @@ describe('Cache', function() {
       expect(cache.get('foo')).to.be.undefined;
     });
 
-    it('clears the metadata in the cache', function() {
+    it('clears the metadata in the cache', function () {
       const cache = new Cache();
 
       cache.set('foo', 23);
