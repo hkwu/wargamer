@@ -9,8 +9,7 @@ describe('Tankopedia', function () {
     applicationId: process.env.APPLICATION_ID,
   });
 
-  // WoT Blitz API seems way slower than WoT API
-  this.timeout(15000);
+  this.timeout(5000);
 
   before(function () {
     chai.use(chaiAsPromised);
