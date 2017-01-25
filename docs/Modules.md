@@ -21,3 +21,27 @@ These are modules tied to the [World of Tanks](?api#WorldOfTanks) client.
 
 - **[Tankopedia](?api=modules-wot#Tankopedia)**
   - Provides methods for retrieving vehicle data.
+
+### World of Tanks Blitz
+These are modules tied to the [World of Tanks Blitz](?api#WorldOfTanksBlitz) client.
+
+- **[Tankopedia](?api=modules-wotc#Tankopedia)**
+  - Provides methods for retrieving vehicle data.
+
+### World of Tanks Console
+These are modules tied to the [World of Tanks Console](?api#WorldOfTanksConsole) client.
+
+- **[Tankopedia](?api=modules-wotx#Tankopedia)**
+  - Provides methods for retrieving vehicle data.
+
+### World of Warplanes
+These are modules tied to the [World of Warplanes](?api#WorldOfWarplanes) client.
+
+- **[Encyclopedia](?api=modules-wowp#Encyclopedia)**
+  - Provides methods for retrieving plane data.
+
+### World of Warships
+These are modules tied to the [World of Warships](?api#WorldOfWarships) client.
+
+- **[Encyclopedia](?api=modules-wows#Encyclopedia)**
+  - Provides methods for retrieving ship data.
