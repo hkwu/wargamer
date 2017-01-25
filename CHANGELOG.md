@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Encyclopedia modules for World of Tanks Blitz, World of Tanks Console, World of Warplanes and World of Warships.
+
+### Fixed
+- Issue with request rejection handler not handling certain types of errors.
+
 ## [0.3.1] - 2017-01-22
 No changes from previous release. Just a patch for npm.
 
