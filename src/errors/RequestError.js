@@ -12,9 +12,8 @@ class RequestError extends ExtendableError {
    * @param {BaseClient} options.client - The API client that the error originated
    *   from.
    * @param {number} options.statusCode - The HTTP status code of the request.
-   * @param {string} options.url - The URL that the request was for.
    */
-  constructor({ message, client, statusCode, url }) {
+  constructor({ message, client, statusCode }) {
     super(message);
 
     /**
@@ -28,12 +27,6 @@ class RequestError extends ExtendableError {
      * @type {number}
      */
     this.statusCode = statusCode;
-
-    /**
-     * The URL of the request.
-     * @type {string}
-     */
-    this.url = url;
   }
 }
 
