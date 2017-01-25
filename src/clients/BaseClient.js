@@ -270,17 +270,16 @@ class BaseClient {
 
       const rejectResponse = (value) => {
         // check if this is a HTTP error or a Wargaming error
-        if (value instanceof APIError) {
+        if (value instanceof Error) {
           throw value;
         }
 
-        const { response: { error, req } } = value;
+        const { response: { error } } = value;
 
         throw new RequestError({
           message: value.body.error.message,
           client: this,
           statusCode: error.status,
-          url: req.url,
         });
       };
 
