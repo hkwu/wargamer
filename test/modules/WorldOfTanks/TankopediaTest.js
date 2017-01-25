@@ -9,7 +9,6 @@ describe('Tankopedia', function () {
     applicationId: process.env.APPLICATION_ID,
   });
 
-  // need to wait quite a bit when the API response is not cached
   this.timeout(5000);
 
   before(function () {
