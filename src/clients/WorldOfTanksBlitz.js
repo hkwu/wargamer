@@ -1,4 +1,5 @@
 import BaseClient from './BaseClient';
+import Tankopedia from '../modules/WorldOfTanksBlitz/Tankopedia';
 
 /**
  * @classdesc The World of Tanks Blitz API client.
@@ -11,6 +12,12 @@ class WorldOfTanksBlitz extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wotb' });
+
+    /**
+     * The client's Tankopedia module.
+     * @type {Tankopedia}
+     */
+    this.tankopedia = new Tankopedia(this);
   }
 }
 
