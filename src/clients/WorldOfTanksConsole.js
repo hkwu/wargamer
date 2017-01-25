@@ -1,4 +1,5 @@
 import BaseClient from './BaseClient';
+import Tankopedia from '../modules/WorldOfTanksConsole/Tankopedia';
 
 /**
  * @classdesc The World of Tanks Console API client.
@@ -11,6 +12,12 @@ class WorldOfTanksConsole extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wotx' });
+
+    /**
+     * The client's Tankopedia module.
+     * @type {Tankopedia}
+     */
+    this.tankopedia = new Tankopedia(this);
   }
 }
 
