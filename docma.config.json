@@ -6,9 +6,24 @@
       ],
       "modules-wot": [
         "./src/modules/WorldOfTanks/*.js"
+      ],
+      "modules-wotb": [
+        "./src/modules/WorldOfTanksBlitz/*.js"
+      ],
+      "modules-wotc": [
+        "./src/modules/WorldOfTanksConsole/*.js"
+      ],
+      "modules-wowp": [
+        "./src/modules/WorldOfWarplanes/*.js"
+      ],
+      "modules-wows": [
+        "./src/modules/WorldOfWarships/*.js"
       ]
     },
     "./src/**/*.js",
+    "!./src/cache/*.js",
+    "!./src/modules/**/*.js",
+    "!./src/utils/*.js",
     "!./src/index.js",
     "./README.md",
     "./docs/*.md"
