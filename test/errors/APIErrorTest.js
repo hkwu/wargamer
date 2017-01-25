@@ -9,7 +9,6 @@ describe('APIError', function () {
       const options = {
         client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
         statusCode: 200,
-        url: 'http://httpbin.org/get',
         requestRealm: 'na',
         method: 'account/list',
         error: {
@@ -25,7 +24,6 @@ describe('APIError', function () {
       expect(/INVALID_TOKEN/.test(apiError.message)).to.be.true;
       expect(apiError.client).to.equal(options.client);
       expect(apiError.statusCode).to.equal(options.statusCode);
-      expect(apiError.url).to.equal(options.url);
       expect(apiError.requestRealm).to.equal(options.requestRealm);
       expect(apiError.method).to.equal(options.method);
       expect(apiError.code).to.equal(options.error.code);

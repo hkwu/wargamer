@@ -10,7 +10,6 @@ describe('RequestError', function () {
         message: 'Invalid thing',
         client: new WorldOfTanks({ realm: 'na', applicationId: process.env.APPLICATION_ID }),
         statusCode: 200,
-        url: 'http://httpbin.org/get',
       };
 
       const requestError = new RequestError(options);
@@ -18,7 +17,6 @@ describe('RequestError', function () {
       expect(/Invalid thing/.test(requestError.message)).to.be.true;
       expect(requestError.client).to.equal(options.client);
       expect(requestError.statusCode).to.equal(options.statusCode);
-      expect(requestError.url).to.equal(options.url);
     });
   });
 });
