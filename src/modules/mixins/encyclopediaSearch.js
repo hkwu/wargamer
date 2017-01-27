@@ -17,6 +17,7 @@
  *   this array.
  * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
  *   matched entry, or `null` if no entries were matched.
+ * @this {ClientModule}
  * @private
  */
 export default function encyclopediaSearch(params) {
