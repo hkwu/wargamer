@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
 import encyclopediaSearch from '../mixins/encyclopediaSearch';
+import extractTopModules from '../mixins/extractTopModules';
 import localize from '../mixins/localize';
 
 /**
@@ -53,6 +54,24 @@ class Tankopedia extends ClientModule {
         'short_name',
       ],
     });
+  }
+
+  /**
+   *
+   * @param identifier
+   * @param profile
+   */
+  findVehicleProfile(identifier, profile = 'stock', options = {}) {
+    if (typeof profile === 'number') {
+      return this.findVehicle(identifier, options)
+        .then(({ tank_id }) => {
+          const response = this.client.get('encyclopedia/vehicleprofile');
+
+          return response[tank_id];
+        });
+    } else if (typeof profile === 'string') {
+
+    }
   }
 
   /**
