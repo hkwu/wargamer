@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
+import encyclopediaSearch from '../mixins/encyclopediaSearch';
 import localize from '../mixins/localize';
 
 /**
@@ -40,52 +41,17 @@ class Tankopedia extends ClientModule {
    *   matched vehicle, or `null` if no vehicles were matched.
    */
   findVehicle(identifier, options = {}) {
-    return new Promise((resolve) => {
-      if (typeof identifier === 'number') {
-        resolve(
-          this.client.get(
-            'encyclopedia/vehicles',
-            { tank_id: identifier },
-            options,
-          ).then(response => response.data[identifier]),
-        );
-      } else if (typeof identifier === 'string') {
-        resolve(
-          this.client.get(
-            'encyclopedia/vehicles', {
-              fields: [
-                'name',
-                'short_name',
-                'tank_id',
-              ],
-            },
-            options,
-          ).then((response) => {
-            const vehicles = response.data;
-
-            this.fuse.set(Object.keys(vehicles).reduce(
-              (accumulated, next) => [...accumulated, vehicles[next]],
-              [],
-            ));
-
-            const results = this.fuse.search(identifier);
-
-            if (!results.length) {
-              return null;
-            }
-
-            const [{ tank_id }] = results;
-
-            return this.client.get(
-              'encyclopedia/vehicles',
-              { tank_id },
-              options,
-            ).then(detailedResponse => detailedResponse.data[tank_id]);
-          }),
-        );
-      }
-
-      throw new TypeError('Expected a string or number as the vehicle identifier.');
+    return encyclopediaSearch.call(this, {
+      identifier,
+      options,
+      indexEndpoint: 'encyclopedia/vehicles',
+      dataEndpoint: 'encyclopedia/vehicles',
+      identifierKey: 'tank_id',
+      fuse: this.fuse,
+      searchFields: [
+        'name',
+        'short_name',
+      ],
     });
   }
 

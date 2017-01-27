@@ -1,24 +1,34 @@
 /**
- * Searches for a vehicle by name or ID and returns its entry from the
- *   `encyclopedia/vehicles` endpoint.
- * @param {(number|string)} identifier - The vehicle identifier to use for
- *   lookup.
- * If a number is supplied, it is treated as the vehicle's ID.
- * If a string is supplied, the identifier is matched against vehicle names
- *   with the closest match being selected.
- * @param {RequestOptions} [options={}] - The options for the request.
+ * Searches for an entry in the encyclopedia endpoint for an API.
+ * @param {Object} params - The parameters for the search.
+ * @param {(number|string)} params.identifier - The entry identifier to use for lookup.
+ * If a number is supplied, it is treated as the entry's ID.
+ * If a string is supplied, the identifier is matched against entry names with
+ *   the closest match being selected.
+ * @param {RequestOptions} [params.options={}] - The options for the request.
+ * @param {string} params.indexEndpoint - The endpoint to use for indexing entries.
+ * @param {string} params.dataEndpoint - The endpoint to use for returning entry
+ *   data.
+ * @param {string} params.identifierKey - The key which identifies entries.
+ * @param {Fuse} params.fuse - The Fuse object to use for matching against indexed
+ *   entries.
+ * @param {Array.<string>} params.searchFields - The fields to request when hitting
+ *   the `indexEndpoint`. The `identifierKey` will automatically be appended to
+ *   this array.
  * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
- *   matched vehicle, or `null` if no vehicles were matched.
+ *   matched entry, or `null` if no entries were matched.
+ * @private
  */
 export default function encyclopediaSearch(params) {
   return new Promise((resolve) => {
     const {
       identifier,
+      options = {},
       indexEndpoint,
       dataEndpoint,
       identifierKey,
-      searchFields,
       fuse,
+      searchFields,
     } = params;
 
     if (typeof identifier === 'number') {
@@ -28,7 +38,7 @@ export default function encyclopediaSearch(params) {
       );
     } else if (typeof identifier === 'string') {
       resolve(
-        this.client.get(indexEndpoint, { fields: searchFields }, options)
+        this.client.get(indexEndpoint, { fields: [...searchFields, identifierKey] }, options)
           .then((response) => {
             const entries = response.data;
 

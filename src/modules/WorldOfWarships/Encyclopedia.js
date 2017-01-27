@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
+import encyclopediaSearch from '../mixins/encyclopediaSearch';
 import localize from '../mixins/localize';
 
 /**
@@ -38,51 +39,16 @@ class Encyclopedia extends ClientModule {
    *   matched ship, or `null` if no ships were matched.
    */
   findShip(identifier, options = {}) {
-    return new Promise((resolve) => {
-      if (typeof identifier === 'number') {
-        resolve(
-          this.client.get(
-            'encyclopedia/ships',
-            { ship_id: identifier },
-            options,
-          ).then(response => response.data[identifier]),
-        );
-      } else if (typeof identifier === 'string') {
-        resolve(
-          this.client.get(
-            'encyclopedia/ships', {
-              fields: [
-                'name',
-                'ship_id',
-              ],
-            },
-            options,
-          ).then((response) => {
-            const ships = response.data;
-
-            this.fuse.set(Object.keys(ships).reduce(
-              (accumulated, next) => [...accumulated, ships[next]],
-              [],
-            ));
-
-            const results = this.fuse.search(identifier);
-
-            if (!results.length) {
-              return null;
-            }
-
-            const [{ ship_id }] = results;
-
-            return this.client.get(
-              'encyclopedia/ships',
-              { ship_id },
-              options,
-            ).then(detailedResponse => detailedResponse.data[ship_id]);
-          }),
-        );
-      }
-
-      throw new TypeError('Expected a string or number as the ship identifier.');
+    return encyclopediaSearch.call(this, {
+      identifier,
+      options,
+      indexEndpoint: 'encyclopedia/ships',
+      dataEndpoint: 'encyclopedia/ships',
+      identifierKey: 'ship_id',
+      fuse: this.fuse,
+      searchFields: [
+        'name',
+      ],
     });
   }
 

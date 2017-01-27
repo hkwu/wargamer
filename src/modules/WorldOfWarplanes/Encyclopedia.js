@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
+import encyclopediaSearch from '../mixins/encyclopediaSearch';
 
 /**
  * @classdesc Module for the World of Warplanes Encyclopedia endpoint.
@@ -37,51 +38,16 @@ class Encyclopedia extends ClientModule {
    *   matched plane, or `null` if no planes were matched.
    */
   findPlane(identifier, options = {}) {
-    return new Promise((resolve) => {
-      if (typeof identifier === 'number') {
-        resolve(
-          this.client.get(
-            'encyclopedia/planeinfo',
-            { plane_id: identifier },
-            options,
-          ).then(response => response.data[identifier]),
-        );
-      } else if (typeof identifier === 'string') {
-        resolve(
-          this.client.get(
-            'encyclopedia/planes', {
-              fields: [
-                'name_i18n',
-                'plane_id',
-              ],
-            },
-            options,
-          ).then((response) => {
-            const planes = response.data;
-
-            this.fuse.set(Object.keys(planes).reduce(
-              (accumulated, next) => [...accumulated, planes[next]],
-              [],
-            ));
-
-            const results = this.fuse.search(identifier);
-
-            if (!results.length) {
-              return null;
-            }
-
-            const [{ plane_id }] = results;
-
-            return this.client.get(
-              'encyclopedia/planeinfo',
-              { plane_id },
-              options,
-            ).then(detailedResponse => detailedResponse.data[plane_id]);
-          }),
-        );
-      }
-
-      throw new TypeError('Expected a string or number as the plane identifier.');
+    return encyclopediaSearch.call(this, {
+      identifier,
+      options,
+      indexEndpoint: 'encyclopedia/planes',
+      dataEndpoint: 'encyclopedia/planeinfo',
+      identifierKey: 'plane_id',
+      fuse: this.fuse,
+      searchFields: [
+        'name_i18n',
+      ],
     });
   }
 }
