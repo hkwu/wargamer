@@ -33,14 +33,12 @@ class Encyclopedia extends ClientModule {
    * If a number is supplied, it is treated as the plane's ID.
    * If a string is supplied, the identifier is matched against plane names with
    *   the closest match being selected.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
    *   matched plane, or `null` if no planes were matched.
    */
-  findPlane(identifier, options = {}) {
+  findPlane(identifier) {
     return encyclopediaSearch.call(this, {
       identifier,
-      options,
       indexEndpoint: 'encyclopedia/planes',
       dataEndpoint: 'encyclopedia/planeinfo',
       identifierKey: 'plane_id',

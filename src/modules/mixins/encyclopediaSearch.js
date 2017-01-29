@@ -5,7 +5,6 @@
  * If a number is supplied, it is treated as the entry's ID.
  * If a string is supplied, the identifier is matched against entry names with
  *   the closest match being selected.
- * @param {RequestOptions} [params.options={}] - The options for the request.
  * @param {string} params.indexEndpoint - The endpoint to use for indexing entries.
  * @param {string} params.dataEndpoint - The endpoint to use for returning entry
  *   data.
@@ -24,7 +23,6 @@ export default function encyclopediaSearch(params) {
   return new Promise((resolve) => {
     const {
       identifier,
-      options = {},
       indexEndpoint,
       dataEndpoint,
       identifierKey,
@@ -34,12 +32,12 @@ export default function encyclopediaSearch(params) {
 
     if (typeof identifier === 'number') {
       resolve(
-        this.client.get(dataEndpoint, { [identifierKey]: identifier }, options)
+        this.client.get(dataEndpoint, { [identifierKey]: identifier })
           .then(response => response.data[identifier]),
       );
     } else if (typeof identifier === 'string') {
       resolve(
-        this.client.get(indexEndpoint, { fields: [...searchFields, identifierKey] }, options)
+        this.client.get(indexEndpoint, { fields: [...searchFields, identifierKey] })
           .then((response) => {
             const entries = response.data;
 
@@ -56,7 +54,7 @@ export default function encyclopediaSearch(params) {
 
             const [{ [identifierKey]: matchedId }] = results;
 
-            return this.client.get(dataEndpoint, { [identifierKey]: matchedId }, options)
+            return this.client.get(dataEndpoint, { [identifierKey]: matchedId })
               .then(detailedResponse => detailedResponse.data[matchedId]);
           }),
       );

@@ -18,7 +18,6 @@ class Accounts extends ClientModule {
    *   on the `account/list` endpoint.
    * @param {string} name - The player's nickname.
    * @param {string} [searchType='exact'] - The search type to use.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(Array.<Object>|number|null), Error>} A promise resolving
    *   to the returned search results.
    * If `searchType` is `'startswith'`, the resolved value matches the data returned
@@ -26,24 +25,18 @@ class Accounts extends ClientModule {
    * If `searchType` is `'exact'`, the resolved value is the matching player's ID,
    *   or `null` if no match was found.
    */
-  findPlayerId(name, searchType = 'exact', options = {}) {
+  findPlayerId(name, searchType = 'exact') {
     return new Promise((resolve) => {
       switch (searchType.toLowerCase()) {
         case 'startswith':
           return resolve(
-            this.client.get(
-              'account/list',
-              { search: name },
-              options,
-            ).then(response => response.data),
+            this.client.get('account/list', { search: name })
+              .then(response => response.data),
           );
         case 'exact':
           return resolve(
-            this.client.get(
-              'account/list',
-              { search: name },
-              options,
-            ).then(response => (response.data[0] ? response.data[0].account_id : null)),
+            this.client.get('account/list', { search: name })
+              .then(response => (response.data[0] ? response.data[0].account_id : null)),
           );
         default:
           throw new Error('Invalid search type specified for player search.');

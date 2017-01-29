@@ -34,14 +34,12 @@ class Encyclopedia extends ClientModule {
    * If a number is supplied, it is treated as the ship's ID.
    * If a string is supplied, the identifier is matched against ship names with
    *   the closest match being selected.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
    *   matched ship, or `null` if no ships were matched.
    */
-  findShip(identifier, options = {}) {
+  findShip(identifier) {
     return encyclopediaSearch.call(this, {
       identifier,
-      options,
       indexEndpoint: 'encyclopedia/ships',
       dataEndpoint: 'encyclopedia/ships',
       identifierKey: 'ship_id',
@@ -55,80 +53,70 @@ class Encyclopedia extends ClientModule {
   /**
    * Localizes a ship type slug.
    * @param {string} slug - The slug.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  localizeShipType(slug, options = {}) {
+  localizeShipType(slug) {
     return localize.call(this, {
       method: 'encyclopedia/info',
       type: 'ship_types',
       slug,
-      options,
     });
   }
 
   /**
    * Localizes a language slug.
    * @param {string} slug - The slug.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  localizeLanguage(slug, options = {}) {
+  localizeLanguage(slug) {
     return localize.call(this, {
       method: 'encyclopedia/info',
       type: 'languages',
       slug,
-      options,
     });
   }
 
   /**
    * Localizes a ship modification slug.
    * @param {string} slug - The slug.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  localizeShipModification(slug, options = {}) {
+  localizeShipModification(slug) {
     return localize.call(this, {
       method: 'encyclopedia/info',
       type: 'ship_modifications',
       slug,
-      options,
     });
   }
 
   /**
    * Localizes a ship module slug.
    * @param {string} slug - The slug.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  localizeShipModule(slug, options = {}) {
+  localizeShipModule(slug) {
     return localize.call(this, {
       method: 'encyclopedia/info',
       type: 'ship_modules',
       slug,
-      options,
     });
   }
 
   /**
    * Localizes a ship nation slug.
    * @param {string} slug - The slug.
-   * @param {RequestOptions} [options={}] - The options for the request.
    * @returns {Promise.<(string|undefined), Error>} Promise resolving to the
    *   translated slug, or `undefined` if it couldn't be translated.
    */
-  localizeShipNation(slug, options = {}) {
+  localizeShipNation(slug) {
     return localize.call(this, {
       method: 'encyclopedia/info',
       type: 'ship_nations',
       slug,
-      options,
     });
   }
 }
