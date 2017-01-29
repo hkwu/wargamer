@@ -27,6 +27,9 @@ const common = {
               },
             }],
           ],
+          plugins: [
+            'transform-class-properties',
+          ],
         },
       },
       {
