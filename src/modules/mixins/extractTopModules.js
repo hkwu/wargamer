@@ -11,11 +11,15 @@ export default function extractTopModules(moduleTree) {
     const module = moduleTree[moduleId];
     const { price_xp, type } = module;
 
+    /* eslint-disable no-param-reassign, camelcase */
+
     if (!topModules[type]) {
       topModules[type] = module;
     } else if (price_xp > topModules[type].price_xp) {
       topModules[type] = module;
     }
+
+    /* eslint-enable no-param-reassign, camelcase */
 
     return topModules;
   }, {});

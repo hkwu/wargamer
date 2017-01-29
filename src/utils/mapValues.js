@@ -10,7 +10,7 @@ export default function mapValues(object, callback = value => value) {
   const keys = Object.keys(object);
 
   return keys.reduce((mapped, nextKey) => {
-    mapped[nextKey] = callback(object[nextKey], nextKey, object); // eslint-disable-line
+    mapped[nextKey] = callback(object[nextKey], nextKey, object); // eslint-disable-line no-param-reassign, max-len
 
     return mapped;
   }, {});
