@@ -10,6 +10,20 @@ import localize from '../mixins/localize';
  */
 class Tankopedia extends ClientModule {
   /**
+   * Mapping between module types and their ID field names.
+   * @type {Object}
+   * @const
+   * @private
+   */
+  MODULE_ID_FIELDS = {
+    vehicleChassis: 'suspension_id',
+    vehicleEngine: 'engine_id',
+    vehicleGun: 'gun_id',
+    vehicleRadio: 'radio_id',
+    vehicleTurret: 'turret_id',
+  };
+
+  /**
    * Constructor.
    * @param {BaseClient} client - The API client this module belongs to.
    */
@@ -57,21 +71,42 @@ class Tankopedia extends ClientModule {
   }
 
   /**
-   *
-   * @param identifier
-   * @param profile
+   * Returns the vehicle profile for a given vehicle.
+   * @param {number} vehicleId - The vehicle ID to use for lookup.
+   * @param {string} [profile='stock'] - The vehicle profile to lookup. Can be
+   *   a profile ID, or one of `'stock'` or `'top'`. The top configuration is
+   *   determined by picking the most expensive modules to research in the
+   *   vehicle's research tree.
+   * @returns {Promise.<Object, Error>} A promise resolving to the data for the
+   *   matched vehicle profile.
    */
-  findVehicleProfile(identifier, profile = 'stock', options = {}) {
-    if (typeof profile === 'number') {
-      return this.findVehicle(identifier, options)
-        .then(({ tank_id }) => {
-          const response = this.client.get('encyclopedia/vehicleprofile');
+  findVehicleProfile(vehicleId, profile = 'stock') {
+    if (profile === 'stock') {
+      return this.client.get('encyclopedia/vehicleprofile', { tank_id: vehicleId })
+        .then(response => response.data[vehicleId]);
+    } else if (profile === 'top') {
+      return this.findVehicle(vehicleId)
+        .then((vehicleData) => {
+          if (!vehicleData) {
+            return null;
+          }
 
-          return response[tank_id];
+          const topModules = extractTopModules(vehicleData.modules_tree);
+          const queryFields = Object.keys(topModules).reduce((accumulated, next) => {
+            const fieldName = this.MODULE_ID_FIELDS[next];
+
+            accumulated[fieldName] = topModules[next].module_id;
+
+            return accumulated;
+          }, {});
+
+          return this.client.get('encyclopedia/vehicleprofile', { ...queryFields, tank_id: vehicleId })
+            .then(response => response.data[vehicleId]);
         });
-    } else if (typeof profile === 'string') {
-
     }
+
+    return this.client.get('encyclopedia/vehicleprofile', { tank_id: vehicleId, profile_id: profile })
+      .then(response => response.data[vehicleId]);
   }
 
   /**

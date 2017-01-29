@@ -41,12 +41,12 @@ acorn@^4.0.1, acorn@^4.0.3, acorn@^4.0.4:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.4.tgz#17a8d6a7a6c4ef538b814ec9abac2779293bf30a"
 
 ajv-keywords@^1.0.0, ajv-keywords@^1.1.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.0.tgz#c11e6859eafff83e0dafc416929472eca946aa2c"
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.1.tgz#314dd0a4b3368fad3dfcdc54ede6171b886daf3c"
 
 ajv@^4.7.0:
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.1.tgz#a903487faabf8608aa22871032ca447440afe494"
+  version "4.11.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.2.tgz#f166c3c11cbc6cb9dcc102a5bcfe5b72c95287e6"
   dependencies:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
@@ -392,6 +392,10 @@ babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-6.13.0.tgz#cad9cad1191b5ad634bf30ae0872391e0647be95"
 
+babel-plugin-syntax-class-properties@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-class-properties/-/babel-plugin-syntax-class-properties-6.13.0.tgz#d7eb23b79a317f8543962c505b827c7d6cac27de"
+
 babel-plugin-syntax-exponentiation-operator@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-exponentiation-operator/-/babel-plugin-syntax-exponentiation-operator-6.13.0.tgz#9ee7e8337290da95288201a6a57f4170317830de"
@@ -411,6 +415,15 @@ babel-plugin-transform-async-to-generator@^6.8.0:
     babel-helper-remap-async-to-generator "^6.22.0"
     babel-plugin-syntax-async-functions "^6.8.0"
     babel-runtime "^6.22.0"
+
+babel-plugin-transform-class-properties@^6.22.0:
+  version "6.22.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-class-properties/-/babel-plugin-transform-class-properties-6.22.0.tgz#aa78f8134495c7de06c097118ba061844e1dc1d8"
+  dependencies:
+    babel-helper-function-name "^6.22.0"
+    babel-plugin-syntax-class-properties "^6.8.0"
+    babel-runtime "^6.22.0"
+    babel-template "^6.22.0"
 
 babel-plugin-transform-es2015-arrow-functions@^6.3.13:
   version "6.22.0"
@@ -822,11 +835,11 @@ browserify-zlib@^0.1.4:
     pako "~0.2.0"
 
 browserslist@^1.4.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.6.0.tgz#85fb7c993540d3fda31c282baf7f5aee698ac9ee"
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-1.7.0.tgz#738df5b2971354d198b2fbd5a22c560d2d896084"
   dependencies:
-    caniuse-db "^1.0.30000613"
-    electron-to-chromium "^1.2.0"
+    caniuse-db "^1.0.30000617"
+    electron-to-chromium "^1.2.1"
 
 buffer-shims@^1.0.0:
   version "1.0.0"
@@ -870,9 +883,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-caniuse-db@^1.0.30000613:
-  version "1.0.30000613"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000613.tgz#639133b7a5380c1416f9701d23d54d093dd68299"
+caniuse-db@^1.0.30000617:
+  version "1.0.30000617"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000617.tgz#9b7fd81f58a35526315c83e60cb5f076f0beb392"
 
 caseless@~0.11.0:
   version "0.11.0"
@@ -1281,9 +1294,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-electron-to-chromium@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.2.0.tgz#3bd7761f85bd4163602259ae6c7ed338050b17e7"
+electron-to-chromium@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.2.1.tgz#63ac7579a1c5bedb296c8607621f2efc9a54b968"
 
 elliptic@^6.0.0:
   version "6.3.2"
@@ -1443,8 +1456,8 @@ eslint-plugin-import@^2.2.0:
     pkg-up "^1.0.0"
 
 eslint@^3.1.1:
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.14.0.tgz#2c617e5f782fda5cbee5bc8be7ef5053af8e63a3"
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.14.1.tgz#8a62175f2255109494747a1b25128d97b8eb3d97"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -1899,8 +1912,8 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
 ignore@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.0.tgz#8d88f03c3002a0ac52114db25d2c673b0bf1e435"
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.2.tgz#1c51e1ef53bab6ddc15db4d9ac4ec139eceb3410"
 
 image-size@~0.5.0:
   version "0.5.1"
@@ -2058,7 +2071,7 @@ is-path-inside@^1.0.0:
 
 is-posix-bracket@^0.1.0:
   version "0.1.1"
-  resolved "http://registry.npmjs.org/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
+  resolved "https://registry.yarnpkg.com/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
 
 is-primitive@^2.0.0:
   version "2.0.0"
@@ -2289,8 +2302,8 @@ load-json-file@^1.0.0:
     strip-bom "^2.0.0"
 
 loader-runner@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.2.0.tgz#824c1b699c4e7a2b6501b85902d5b862bf45b3fa"
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
 
 loader-utils@^0.2.11, loader-utils@^0.2.16, loader-utils@^0.2.7:
   version "0.2.16"
@@ -2477,8 +2490,8 @@ mute-stream@0.0.5:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.5.tgz#8fbfabb0a98a253d3184331f9e8deb7372fac6c0"
 
 nan@^2.3.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.5.0.tgz#aa8f1e34531d807e9e27755b234b4a6ec0c152a8"
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.5.1.tgz#d5b01691253326a97a2bbee9e61c55d8d60351e2"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -2893,7 +2906,7 @@ regenerator-transform@0.9.8:
 
 regex-cache@^0.4.2:
   version "0.4.3"
-  resolved "https://registry.yarnpkg.com/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
+  resolved "http://registry.npmjs.org/regex-cache/-/regex-cache-0.4.3.tgz#9b1a6c35d4d0dfcef5711ae651e8e9d3d7114145"
   dependencies:
     is-equal-shallow "^0.1.3"
     is-primitive "^2.0.0"
@@ -3074,8 +3087,8 @@ source-list-map@~0.1.7:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
 
 source-map-support@^0.4.2:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.10.tgz#d7b19038040a14c0837a18e630a196453952b378"
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.11.tgz#647f939978b38535909530885303daf23279f322"
   dependencies:
     source-map "^0.5.3"
 
@@ -3193,8 +3206,8 @@ strip-json-comments@~1.0.4:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
 
 superagent@^3.3.1:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.3.2.tgz#23b4ed895911215a1f90b44d16638b6492f9c114"
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.4.1.tgz#4bd12741224d0ece6d9f757f1c3becbe7f24c115"
   dependencies:
     component-emitter "^1.2.0"
     cookiejar "^2.0.6"
@@ -3437,8 +3450,8 @@ webidl-conversions@^3.0.0, webidl-conversions@^3.0.1:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
 
 webpack-merge@^2.0.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-2.4.0.tgz#4c518d471632c29ae22e83687c2f42a9cd5f35ea"
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-2.6.1.tgz#f1d801d2c5d39f83ffec9f119240b3e3be994a1c"
   dependencies:
     lodash "^4.17.4"
 

@@ -41,6 +41,20 @@ describe('Tankopedia', function () {
     });
   });
 
+  describe('#findVehicleProfile()', function () {
+    it('finds stock vehicle profiles', function () {
+      return expect(client.tankopedia.findVehicleProfile(6673)).to.eventually.have.deep.property('engine.name', 'Maybach HL 57 TR');
+    });
+
+    it('finds top vehicle profiles', function () {
+      return expect(client.tankopedia.findVehicleProfile(1, 'top')).to.eventually.have.deep.property('gun.name', '76 mm S-54');
+    });
+
+    it('finds vehicle profiles by ID', function () {
+      return expect(client.tankopedia.findVehicleProfile(1041, '21-1047-2066-4372')).to.eventually.have.deep.property('modules.radio_id', 1047);
+    });
+  });
+
   describe('#localizeCrewRole()', function () {
     it('localizes crew roles', function () {
       return expect(client.tankopedia.localizeCrewRole('radioman')).to.eventually.equal('Radio Operator');
