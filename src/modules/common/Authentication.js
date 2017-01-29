@@ -22,20 +22,16 @@ class Authentication extends ClientModule {
    *   plain `Error`.
    */
   renewAccessToken() {
-    return new Promise((resolve) => {
-      if (!this.client.accessToken) {
-        throw new Error('Failed to renew access token: client\'s access token is not set.');
-      }
+    if (!this.client.accessToken) {
+      return Promise.reject(new Error('Failed to renew access token: client\'s access token is not set.'));
+    }
 
-      resolve(
-        this.client.post('auth/prolongate', {}, { type: this.client.type === 'wotx' ? 'wotx' : 'wot' })
-          .then((response) => {
-            this.client.accessToken = response.data.access_token;
+    return this.client.post('auth/prolongate', {}, { type: this.client.type === 'wotx' ? 'wotx' : 'wot' })
+      .then((response) => {
+        this.client.accessToken = response.data.access_token;
 
-            return response;
-          }),
-      );
-    });
+        return response;
+      });
   }
 
   /**
@@ -46,20 +42,16 @@ class Authentication extends ClientModule {
    *   plain `Error`.
    */
   destroyAccessToken() {
-    return new Promise((resolve) => {
-      if (!this.client.accessToken) {
-        throw new Error('Failed to invalidate access token: client\'s access token is not set.');
-      }
+    if (!this.client.accessToken) {
+      return Promise.reject(new Error('Failed to invalidate access token: client\'s access token is not set.'));
+    }
 
-      resolve(
-        this.client.post('auth/logout', {}, { type: this.client.type === 'wotx' ? 'wotx' : 'wot' })
-          .then((response) => {
-            this.client.accessToken = null;
+    return this.client.post('auth/logout', {}, { type: this.client.type === 'wotx' ? 'wotx' : 'wot' })
+      .then((response) => {
+        this.client.accessToken = null;
 
-            return response;
-          }),
-      );
-    });
+        return response;
+      });
   }
 }
 

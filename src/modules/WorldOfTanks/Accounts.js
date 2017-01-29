@@ -26,22 +26,16 @@ class Accounts extends ClientModule {
    *   or `null` if no match was found.
    */
   findPlayerId(name, searchType = 'exact') {
-    return new Promise((resolve) => {
-      switch (searchType.toLowerCase()) {
-        case 'startswith':
-          return resolve(
-            this.client.get('account/list', { search: name })
-              .then(response => response.data),
-          );
-        case 'exact':
-          return resolve(
-            this.client.get('account/list', { search: name })
-              .then(response => (response.data[0] ? response.data[0].account_id : null)),
-          );
-        default:
-          throw new Error('Invalid search type specified for player search.');
-      }
-    });
+    switch (searchType.toLowerCase()) {
+      case 'startswith':
+        return this.client.get('account/list', { search: name })
+          .then(response => response.data);
+      case 'exact':
+        return this.client.get('account/list', { search: name })
+          .then(response => (response.data[0] ? response.data[0].account_id : null));
+      default:
+        return Promise.reject(new Error('Invalid search type specified for player search.'));
+    }
   }
 }
 

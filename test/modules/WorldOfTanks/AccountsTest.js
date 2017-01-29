@@ -5,7 +5,7 @@ import WorldOfTanks from '../../../src/clients/WorldOfTanks';
 
 describe('Accounts', function () {
   const client = new WorldOfTanks({
-    realm: 'na',
+    realm: 'ru',
     applicationId: process.env.APPLICATION_ID,
   });
 
@@ -15,7 +15,7 @@ describe('Accounts', function () {
 
   describe('#findPlayerId()', function () {
     it('finds exact matches', function () {
-      return expect(client.accounts.findPlayerId('straik', 'exact', { realm: 'ru' })).to.eventually.equal(73892);
+      return expect(client.accounts.findPlayerId('straik', 'exact')).to.eventually.equal(73892);
     });
 
     it('finds fuzzy matches', function () {

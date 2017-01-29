@@ -20,46 +20,40 @@
  * @private
  */
 export default function encyclopediaSearch(params) {
-  return new Promise((resolve) => {
-    const {
-      identifier,
-      indexEndpoint,
-      dataEndpoint,
-      identifierKey,
-      fuse,
-      searchFields,
-    } = params;
+  const {
+    identifier,
+    indexEndpoint,
+    dataEndpoint,
+    identifierKey,
+    fuse,
+    searchFields,
+  } = params;
 
-    if (typeof identifier === 'number') {
-      resolve(
-        this.client.get(dataEndpoint, { [identifierKey]: identifier })
-          .then(response => response.data[identifier]),
-      );
-    } else if (typeof identifier === 'string') {
-      resolve(
-        this.client.get(indexEndpoint, { fields: [...searchFields, identifierKey] })
-          .then((response) => {
-            const entries = response.data;
+  if (typeof identifier === 'number') {
+    return this.client.get(dataEndpoint, { [identifierKey]: identifier })
+      .then(response => response.data[identifier]);
+  } else if (typeof identifier === 'string') {
+    return this.client.get(indexEndpoint, { fields: [...searchFields, identifierKey] })
+      .then((response) => {
+        const entries = response.data;
 
-            fuse.set(Object.keys(entries).reduce(
-              (accumulated, next) => [...accumulated, entries[next]],
-              [],
-            ));
+        fuse.set(Object.keys(entries).reduce(
+          (accumulated, next) => [...accumulated, entries[next]],
+          [],
+        ));
 
-            const results = fuse.search(identifier);
+        const results = fuse.search(identifier);
 
-            if (!results.length) {
-              return null;
-            }
+        if (!results.length) {
+          return null;
+        }
 
-            const [{ [identifierKey]: matchedId }] = results;
+        const [{ [identifierKey]: matchedId }] = results;
 
-            return this.client.get(dataEndpoint, { [identifierKey]: matchedId })
-              .then(detailedResponse => detailedResponse.data[matchedId]);
-          }),
-      );
-    }
+        return this.client.get(dataEndpoint, { [identifierKey]: matchedId })
+          .then(detailedResponse => detailedResponse.data[matchedId]);
+      });
+  }
 
-    throw new TypeError('Expected a string or number as the entry identifier.');
-  });
+  return Promise.reject(new TypeError('Expected a string or number as the entry identifier.'));
 }
