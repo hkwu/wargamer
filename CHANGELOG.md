@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [0.4.0] - 2017-01-29
 ### Added
 - Encyclopedia modules for World of Tanks Blitz, World of Tanks Console, World of Warplanes and World of Warships.
+- `findVehicleProfile()` method for World of Tanks module.
+
+### Changed
+- Removed `options` parameter from module convenience methods.
 
 ### Fixed
 - Issue with request rejection handler not handling certain types of errors.
@@ -70,7 +76,8 @@ No changes from previous release. Just a patch for npm.
 - Unit tests and continuous integration.
 - Documentation build process.
 
-[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/hkwu/wargamer/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/hkwu/wargamer/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hkwu/wargamer/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hkwu/wargamer/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/hkwu/wargamer/compare/v0.2.0...v0.2.1
