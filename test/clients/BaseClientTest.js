@@ -62,7 +62,7 @@ describe('BaseClient', function () {
   });
 
   describe('#request()', function () {
-    this.timeout(5000);
+    this.timeout(0);
 
     before(function () {
       chai.use(chaiAsPromised);

@@ -9,7 +9,7 @@ describe('Encyclopedia', function () {
     applicationId: process.env.APPLICATION_ID,
   });
 
-  this.timeout(3000);
+  this.timeout(0);
 
   before(function () {
     chai.use(chaiAsPromised);
