@@ -98,9 +98,12 @@ class Tankopedia extends ClientModule {
             return accumulated;
           }, {});
 
-          return this.client.get('encyclopedia/vehicleprofile', { ...queryFields, tank_id: vehicleId })
-            .then(response => response.data[vehicleId]);
-        });
+          return Promise.all([
+            vehicleId,
+            this.client.get('encyclopedia/vehicleprofile', { ...queryFields, tank_id: vehicleId }),
+          ]);
+        })
+        .then(([vehicleId, response]) => response.data[vehicleId]);
     }
 
     return this.client.get('encyclopedia/vehicleprofile', { tank_id: vehicleId, profile_id: profile })

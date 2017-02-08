@@ -50,9 +50,12 @@ export default function encyclopediaSearch(params) {
 
         const [{ [identifierKey]: matchedId }] = results;
 
-        return this.client.get(dataEndpoint, { [identifierKey]: matchedId })
-          .then(detailedResponse => detailedResponse.data[matchedId]);
-      });
+        return Promise.all([
+          matchedId,
+          this.client.get(dataEndpoint, { [identifierKey]: matchedId }),
+        ]);
+      })
+      .then(([matchedId, response]) => response.data[matchedId]);
   }
 
   return Promise.reject(new TypeError('Expected a string or number as the entry identifier.'));
