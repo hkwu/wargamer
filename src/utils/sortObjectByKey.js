@@ -6,9 +6,10 @@
  * @private
  */
 export default function sortObjectByKey(object) {
-  return Object.keys(object).sort().reduce((built, next) => {
-    built[next] = object[next]; // eslint-disable-line no-param-reassign
-
-    return built;
-  }, {});
+  return Object.keys(object)
+    .sort()
+    .reduce((built, next) => ({
+      ...built,
+      [next]: object[next],
+    }), {});
 }

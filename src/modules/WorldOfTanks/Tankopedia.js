@@ -93,9 +93,10 @@ class Tankopedia extends ClientModule {
           const queryFields = Object.keys(topModules).reduce((accumulated, next) => {
             const fieldName = this.MODULE_ID_FIELDS[next];
 
-            accumulated[fieldName] = topModules[next].module_id; // eslint-disable-line no-param-reassign, max-len
-
-            return accumulated;
+            return {
+              ...accumulated,
+              [fieldName]: topModules[next].module_id,
+            };
           }, {});
 
           return Promise.all([
