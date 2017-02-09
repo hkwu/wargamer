@@ -33,7 +33,7 @@ describe('Tankopedia', function () {
     });
 
     it('finds vehicles by partial match - short name', function () {
-      return expect(client.tankopedia.findVehicle('ltrak')).to.eventually.have.property('short_name', 'LTraktor');
+      return expect(client.tankopedia.findVehicle('t1 heav')).to.eventually.have.property('short_name', 'T1 Heavy');
     });
 
     it('throws for invalid identifier types', function () {
