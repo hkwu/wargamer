@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Additional options to configure the client's data cache.
+
+### Changed
+- The `cacheTimeToLive` client option now represents the TTL in seconds, not milliseconds.
 
 ## [0.4.0] - 2017-01-29
 ### Added

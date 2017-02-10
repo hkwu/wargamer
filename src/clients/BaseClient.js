@@ -1,8 +1,8 @@
+import Cache from 'stale-lru-cache';
 import request from 'superagent';
 import APIError from '../errors/APIError';
 import APIResponse from '../responses/APIResponse';
 import Authentication from '../modules/common/Authentication';
-import Cache from '../cache/Cache';
 import RequestError from '../errors/RequestError';
 import hashCode from '../utils/hashCode';
 import mapValues from '../utils/mapValues';
@@ -17,9 +17,10 @@ import sortObjectByKey from '../utils/sortObjectByKey';
  *   if it will be using one.
  * @param {string} [language=null] - The default localization language
  *   to use for API responses.
- * @param {?number} [options.cacheTimeToLive=600000] - The time to live in
- *   milliseconds for the client's data cache entries. `null` if no there is
- *   no TTL.
+ * @param {?number} [options.cacheTimeToLive=600] - The time to live in seconds
+ *   for the client's data cache entries. `null` if no there is no TTL.
+ * @param {?number} [options.cacheMaxSize=250] - The max number of entries in
+ *   the client's data cache.
  */
 
 /**
@@ -83,6 +84,24 @@ const getBaseUri = (realm, type) => {
  */
 class BaseClient {
   /**
+   * The default time to live for cache entries, in seconds.
+   * @type {number}
+   * @static
+   * @const
+   * @private
+   */
+  static DEFAULT_CACHE_TTL = 600;
+
+  /**
+   * The default size of the cache.
+   * @type {number}
+   * @static
+   * @const
+   * @private
+   */
+  static DEFAULT_CACHE_SIZE = 250;
+
+  /**
    * Constructor.
    * @param {Object} options - The client options.
    * @param {string} options.type - The type of API this client is for.
@@ -92,9 +111,10 @@ class BaseClient {
    *   client, if it will be using one.
    * @param {string} [options.language=null] - The default localization language
    *   to use for API responses.
-   * @param {?number} [options.cacheTimeToLive=600000] - The time to live in
-   *   milliseconds for the client's data cache entries. `null` if no there is
-   *   no TTL.
+   * @param {?number} [options.cacheTimeToLive=600] - The time to live in seconds
+   *   for the client's data cache entries. `null` if no there is no TTL.
+   * @param {?number} [options.cacheMaxSize=250] - The max number of entries in
+   *   the client's data cache.
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor(options) {
@@ -104,7 +124,8 @@ class BaseClient {
       applicationId,
       accessToken = null,
       language = null,
-      cacheTimeToLive = 600 * 1000,
+      cacheTimeToLive = this.constructor.DEFAULT_CACHE_TTL,
+      cacheMaxSize = this.constructor.DEFAULT_CACHE_SIZE,
     } = options;
 
     if (typeof realm !== 'string' || !REALM_TLD[realm.toLowerCase()]) {
@@ -163,7 +184,11 @@ class BaseClient {
      * @type {Cache}
      * @private
      */
-    this.cache = new Cache({ timeToLive: cacheTimeToLive });
+    this.cache = new Cache({
+      maxAge: cacheTimeToLive,
+      staleWhileRevalidate: 300,
+      maxSize: cacheMaxSize,
+    });
   }
 
   /**
@@ -301,7 +326,15 @@ class BaseClient {
           .query(normalizedPayload)
           .then(fulfillResponse)
           .then((apiResponse) => {
-            this.cache.set(cacheKey, apiResponse.body);
+            this.cache.set(cacheKey, apiResponse.body, {
+              revalidate: (key, callback) => {
+                this.request(apiMethod, params, options)
+                  .then((revalidateResponse) => {
+                    callback(null, revalidateResponse.body);
+                  })
+                  .catch(callback);
+              },
+            });
 
             return apiResponse;
           })
