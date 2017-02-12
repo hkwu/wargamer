@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - The `cacheTimeToLive` client option now represents the TTL in seconds, not milliseconds.
 
+### Fixed
+- Issue with `findVehicleProfile()` not returning `null` when a vehicle ID match is not found.
+
 ## [0.4.0] - 2017-01-29
 ### Added
 - Encyclopedia modules for World of Tanks Blitz, World of Tanks Console, World of Warplanes and World of Warships.
