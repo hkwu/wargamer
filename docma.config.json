@@ -20,11 +20,9 @@
         "./src/modules/WorldOfWarships/*.js"
       ]
     },
-    "./src/**/*.js",
-    "!./src/cache/*.js",
-    "!./src/modules/**/*.js",
-    "!./src/utils/*.js",
-    "!./src/index.js",
+    "./src/clients/*.js",
+    "./src/errors/*.js",
+    "./src/responses/*.js",
     "./README.md",
     "./docs/*.md"
   ],
