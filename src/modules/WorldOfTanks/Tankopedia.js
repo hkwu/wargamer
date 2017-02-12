@@ -1,8 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
-import encyclopediaSearch from '../mixins/encyclopediaSearch';
-import extractTopModules from '../mixins/extractTopModules';
-import localize from '../mixins/localize';
+import { extractTopModules, localize, resolveEntry } from '../mixins/Encyclopedia';
 
 /**
  * @classdesc Module for the World of Tanks Tankopedia endpoint.
@@ -55,7 +53,7 @@ class Tankopedia extends ClientModule {
    *   matched vehicle, or `null` if no vehicles were matched.
    */
   findVehicle(identifier) {
-    return encyclopediaSearch.call(this, {
+    return resolveEntry.call(this, {
       identifier,
       indexEndpoint: 'encyclopedia/vehicles',
       dataEndpoint: 'encyclopedia/vehicles',
@@ -75,8 +73,8 @@ class Tankopedia extends ClientModule {
    *   a profile ID, or one of `'stock'` or `'top'`. The top configuration is
    *   determined by picking the most expensive modules to research in the
    *   vehicle's research tree.
-   * @returns {Promise.<Object, Error>} A promise resolving to the data for the
-   *   matched vehicle profile.
+   * @returns {Promise.<?Object, Error>} A promise resolving to the data for the
+   *   matched vehicle profile, or `null` if no vehicle was matched.
    */
   findVehicleProfile(vehicleId, profile = 'stock') {
     if (profile === 'stock') {
@@ -99,12 +97,9 @@ class Tankopedia extends ClientModule {
             };
           }, {});
 
-          return Promise.all([
-            vehicleId,
-            this.client.get('encyclopedia/vehicleprofile', { ...queryFields, tank_id: vehicleId }),
-          ]);
+          return this.client.get('encyclopedia/vehicleprofile', { ...queryFields, tank_id: vehicleId });
         })
-        .then(([vehicleId, response]) => response.data[vehicleId]);
+        .then(result => result && result.data[vehicleId]);
     }
 
     return this.client.get('encyclopedia/vehicleprofile', { tank_id: vehicleId, profile_id: profile })
