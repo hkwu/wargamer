@@ -1,4 +1,4 @@
-import Accounts from '../modules/WorldOfTanks/Accounts';
+import Accounts from '../modules/common/Accounts';
 import BaseClient from './BaseClient';
 import Tankopedia from '../modules/WorldOfTanks/Tankopedia';
 

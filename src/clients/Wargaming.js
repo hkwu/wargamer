@@ -1,3 +1,4 @@
+import Accounts from '../modules/common/Accounts';
 import BaseClient from './BaseClient';
 
 /**
@@ -11,6 +12,12 @@ class Wargaming extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wgn' });
+
+    /**
+     * The client's Accounts module.
+     * @type {Accounts}
+     */
+    this.accounts = new Accounts(this);
   }
 }
 

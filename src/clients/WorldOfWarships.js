@@ -1,3 +1,4 @@
+import Accounts from '../modules/common/Accounts';
 import BaseClient from './BaseClient';
 import Encyclopedia from '../modules/WorldOfWarships/Encyclopedia';
 
@@ -12,6 +13,12 @@ class WorldOfWarships extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wows' });
+
+    /**
+     * The client's Accounts module.
+     * @type {Accounts}
+     */
+    this.accounts = new Accounts(this);
 
     /**
      * The client's Encyclopedia module.

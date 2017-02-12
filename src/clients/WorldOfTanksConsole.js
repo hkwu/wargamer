@@ -1,3 +1,4 @@
+import Accounts from '../modules/common/Accounts';
 import BaseClient from './BaseClient';
 import Tankopedia from '../modules/WorldOfTanksConsole/Tankopedia';
 
@@ -12,6 +13,12 @@ class WorldOfTanksConsole extends BaseClient {
    */
   constructor(options) {
     super({ ...options, type: 'wotx' });
+
+    /**
+     * The client's Accounts module.
+     * @type {Accounts}
+     */
+    this.accounts = new Accounts(this);
 
     /**
      * The client's Tankopedia module.
