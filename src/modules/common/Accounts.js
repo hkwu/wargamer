@@ -1,7 +1,7 @@
 import ClientModule from '../ClientModule';
 
 /**
- * @classdesc Module for the World of Tanks Accounts endpoint.
+ * @classdesc Module for Accounts endpoints.
  * @extends ClientModule
  */
 class Accounts extends ClientModule {
@@ -32,7 +32,7 @@ class Accounts extends ClientModule {
           .then(response => response.data);
       case 'exact':
         return this.client.get('account/list', { search: name })
-          .then(response => (response.data[0] ? response.data[0].account_id : null));
+          .then(response => (response.data.length ? response.data[0].account_id : null));
       default:
         return Promise.reject(new Error('Invalid search type specified for player search.'));
     }
