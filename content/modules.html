@@ -1,0 +1,66 @@
+
+<html><head></head><body><h1 id="modules">Modules</h1>
+<hr />
+<p>Wargamer clients have additional convenience methods which are made available through client modules. This page lists these modules and their functionality.</p>
+<blockquote>
+<h4 id="note">Note</h4>
+<p>Module convenience methods do not return a promise resolving to the same wrapped <code>APIResponse</code> as the regular <code>get()</code> or <code>post()</code> methods. Instead, they resolve directly to the resource requested (e.g. a <code>string</code> or <code>Object</code>).</p>
+</blockquote>
+<h2 id="usage">Usage</h2>
+<p>Modules are accessed by name through their respective client instances. For instance, the Accounts module on a World of Tanks client is available through <code>client.accounts</code>.</p>
+<h2 id="list-of-modules">List of Modules</h2>
+<h3 id="common">Common</h3>
+<p>These are modules that are not unique to a specific client.</p>
+<ul>
+<li><p><strong><a href="?api=modules-common#Accounts">Accounts</a></strong></p>
+<ul>
+<li>Provides methods for retrieving player account data.</li>
+</ul>
+</li>
+<li><p><strong><a href="?api=modules-common#Authentication">Authentication</a></strong></p>
+<ul>
+<li>Provides methods for handling client access tokens.</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-of-tanks">World of Tanks</h3>
+<p>These are modules tied to the <a href="?api#WorldOfTanks">World of Tanks</a> client.</p>
+<ul>
+<li><strong><a href="?api=modules-wot#Tankopedia">Tankopedia</a></strong><ul>
+<li>Provides methods for retrieving vehicle data.</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-of-tanks-blitz">World of Tanks Blitz</h3>
+<p>These are modules tied to the <a href="?api#WorldOfTanksBlitz">World of Tanks Blitz</a> client.</p>
+<ul>
+<li><strong><a href="?api=modules-wotc#Tankopedia">Tankopedia</a></strong><ul>
+<li>Provides methods for retrieving vehicle data.</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-of-tanks-console">World of Tanks Console</h3>
+<p>These are modules tied to the <a href="?api#WorldOfTanksConsole">World of Tanks Console</a> client.</p>
+<ul>
+<li><strong><a href="?api=modules-wotx#Tankopedia">Tankopedia</a></strong><ul>
+<li>Provides methods for retrieving vehicle data.</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-of-warplanes">World of Warplanes</h3>
+<p>These are modules tied to the <a href="?api#WorldOfWarplanes">World of Warplanes</a> client.</p>
+<ul>
+<li><strong><a href="?api=modules-wowp#Encyclopedia">Encyclopedia</a></strong><ul>
+<li>Provides methods for retrieving plane data.</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-of-warships">World of Warships</h3>
+<p>These are modules tied to the <a href="?api#WorldOfWarships">World of Warships</a> client.</p>
+<ul>
+<li><strong><a href="?api=modules-wows#Encyclopedia">Encyclopedia</a></strong><ul>
+<li>Provides methods for retrieving ship data.</li>
+</ul>
+</li>
+</ul>
+</body></html>

@@ -1,0 +1,72 @@
+
+<html><head></head><body><h1 id="introduction">Introduction</h1>
+<hr />
+<p>Wargamer provides a promise-based interface for making requests to the Wargaming.net API. There are multiple API client classes, each meant for making requests to specific APIs.</p>
+<h2 id="constructing-the-client">Constructing the Client</h2>
+<p>You can import the <code>Wargamer</code> class from the library, which has static methods to construct each type of API client.</p>
+<pre><code class="lang-js">import Wargamer from 'wargamer';
+
+const wot = Wargamer.WoT({ realm: 'na', applicationId: 'id' });
+</code></pre>
+<p>Alternatively, you can import just the API client constructor that you need.</p>
+<pre><code class="lang-js">import { WorldOfTanks } from 'wargamer';
+
+const wot = new WorldOfTanks({ realm: 'na', applicationId: 'id' });
+</code></pre>
+<p>The client constructors take a <a href="?api#ClientOptions">ClientOptions</a> object.</p>
+<blockquote>
+<h4 id="usage-with-require-">Usage with <code>require()</code></h4>
+<p>Unfortunately, this is less elegant.</p>
+<pre><code class="lang-js">// preferred
+const { WorldOfTanks } = require('wargamer');
+
+// but if you must
+const Wargamer = require('wargamer').default;
+const WorldOfTanks = require('wargamer').WorldOfTanks;
+</code></pre>
+</blockquote>
+<h2 id="making-requests">Making Requests</h2>
+<p>API clients currently support GET and POST requests through the <a href="?api#BaseClient#get">get()</a> and <a href="?api#BaseClient#post">post()</a> methods, respectively. The <code>method</code> parameter determines which API method the request will use. For instance, the following snippet will make a GET request to the <code>account/list</code> endpoint in the World of Tanks API.</p>
+<pre><code class="lang-js">wot.get('account/list', { search: 'test' })
+  .then(res =&gt; console.log(res.data))
+  .catch(err =&gt; console.log(err.message));
+</code></pre>
+<p>The request methods have a promise interface, so you can chain <code>then()</code> and <code>catch()</code> calls to their return values. You can also use <code>async</code>/<code>await</code> if you want.</p>
+<p>On a successful request, the return value will resolve to an <a href="?api#APIResponse">APIResponse</a> object.</p>
+<p>On error, the promise will reject. However, the value that the promise rejects with will differ depending on if there was an error with the request itself or if the Wargaming API rejected the request (although the request was correctly received).</p>
+<ul>
+<li>If the request did not reach the API correctly, the promise rejects with a <a href="?api#RequestError">RequestError</a>.</li>
+<li>If the request reached the API and was then rejected, the promise rejects with an <a href="?api#APIError">APIError</a>.</li>
+</ul>
+<blockquote>
+<h4 id="note-about-caching">Note about caching</h4>
+<p>Wargamer client requests are automatically cached in order to improve performance, but this only applies to <code>GET</code> requests. <code>POST</code> requests are not cached.</p>
+</blockquote>
+<h3 id="sending-parameters">Sending Parameters</h3>
+<p>The second parameter in the request methods is the parameter payload to send to the API method. Keys in the parameters object will be merged automatically with the client's application ID on each request, so you don't need to specify it each time. Similarly, the client's access token (if one was provided) will also be merged in.</p>
+<blockquote>
+<p>Note that user provided keys will still overwrite existing keys. You can, for instance, override the client's default application ID on a per-request basis by providing another <code>application_id</code> in the parameters object.</p>
+</blockquote>
+<p>Some API method parameter values require special formatting. In order to make it more convenient to work with these parameters, Wargamer automatically converts the following values:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Input</th>
+<th style="text-align:center">Output</th>
+<th>Transformation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>Array</code></td>
+<td style="text-align:center"><code>string</code></td>
+<td>Elements are joined into a comma-delimited string.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>Date</code></td>
+<td style="text-align:center"><code>string</code></td>
+<td>Object is converted to an ISO 8601 string.</td>
+</tr>
+</tbody>
+</table>
+</body></html>

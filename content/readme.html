@@ -1,0 +1,58 @@
+
+<html><head></head><body><h1 id="wargamer">Wargamer</h1>
+<hr />
+<p><a href="https://www.npmjs.com/package/wargamer"><img src="https://img.shields.io/npm/v/wargamer.svg?style=flat-square" alt="npm"></a>
+<a href="https://www.npmjs.com/package/wargamer"><img src="https://img.shields.io/npm/dt/wargamer.svg?style=flat-square" alt="npm"></a>
+<a href="https://travis-ci.org/hkwu/wargamer"><img src="https://img.shields.io/travis/rust-lang/rust.svg?style=flat-square" alt="Travis"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT"></a></p>
+<p>A promise-based Node.js client library for the Wargaming.net API. Supports all of the documented APIs listed in the <a href="https://developers.wargaming.net/reference/">API reference</a>.</p>
+<ul>
+<li>World of Tanks</li>
+<li>World of Tanks Blitz</li>
+<li>World of Tanks Console</li>
+<li>World of Warships</li>
+<li>World of Warplanes</li>
+<li>Wargaming.net</li>
+</ul>
+<p>This library currently supports Node 4 and above.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-bash">npm install --save wargamer
+</code></pre>
+<p>or</p>
+<pre><code class="lang-bash">yarn add wargamer
+</code></pre>
+<p>UMD builds are available as well.</p>
+<pre><code class="lang-html">&lt;script src="wargamer.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const Wargamer = window.Wargamer;
+  const wot = new Wargamer.WorldOfTanks({ /* ... */ });
+&lt;/script&gt;
+</code></pre>
+<p>The UMD distribution is hosted by the following CDNs:</p>
+<ul>
+<li><a href="https://unpkg.com/#/">unpkg</a> - files are located under <code>dist</code> (e.g. <code>dist/wargamer.min.js</code>).</li>
+<li><a href="https://www.jsdelivr.com/">jsDelivr</a> - see the library's <a href="https://www.jsdelivr.com/projects/wargamer">project entry</a>.</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>Below is a sample of Wargamer code. More details and examples are available on the <a href="https://wargamer.js.org/">documentation site</a>.</p>
+<pre><code class="lang-js">import Wargamer from 'wargamer';
+
+const wot = Wargamer.WoT({ realm: 'ru', applicationId: 'application_id'});
+
+wot.get('account/list', { search: 'Straik' })
+  .then((response) =&gt; {
+    console.log(response.meta); // { count: 100 }
+    console.log(response.data); // [{ nickname: 'Straik', account_id: 73892 }, ...]
+  })
+  .catch((error) =&gt; {
+    console.log(error.message);
+  });
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://wargamer.js.org/">Wargamer Documentation</a></li>
+<li><a href="https://developers.wargaming.net/">Wargaming.net Developer's Room</a></li>
+<li><a href="https://developers.wargaming.net/documentation/">Wargaming.net API Documentation</a></li>
+<li><a href="https://developers.wargaming.net/reference/">Wargaming.net API Reference and Interactive Console</a></li>
+</ul>
+</body></html>
