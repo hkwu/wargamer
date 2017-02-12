@@ -8,25 +8,26 @@ import { extractTopModules, localize, resolveEntry } from '../mixins/Encyclopedi
  */
 class Tankopedia extends ClientModule {
   /**
-   * Mapping between module types and their ID field names.
-   * @type {Object}
-   * @const
-   * @private
-   */
-  MODULE_ID_FIELDS = {
-    vehicleChassis: 'suspension_id',
-    vehicleEngine: 'engine_id',
-    vehicleGun: 'gun_id',
-    vehicleRadio: 'radio_id',
-    vehicleTurret: 'turret_id',
-  };
-
-  /**
    * Constructor.
    * @param {BaseClient} client - The API client this module belongs to.
    */
   constructor(client) {
     super(client, 'tankopedia');
+
+    /**
+     * Mapping between module types and their ID field names.
+     * @type {Object}
+     * @static
+     * @const
+     * @private
+     */
+    this.constructor.MODULE_ID_FIELDS = {
+      vehicleChassis: 'suspension_id',
+      vehicleEngine: 'engine_id',
+      vehicleGun: 'gun_id',
+      vehicleRadio: 'radio_id',
+      vehicleTurret: 'turret_id',
+    };
 
     /**
      * The module's Fuse object.
@@ -89,7 +90,7 @@ class Tankopedia extends ClientModule {
 
           const topModules = extractTopModules(vehicleData.modules_tree);
           const queryFields = Object.keys(topModules).reduce((accumulated, next) => {
-            const fieldName = this.MODULE_ID_FIELDS[next];
+            const fieldName = this.constructor.MODULE_ID_FIELDS[next];
 
             return {
               ...accumulated,

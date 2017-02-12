@@ -84,24 +84,6 @@ const getBaseUri = (realm, type) => {
  */
 class BaseClient {
   /**
-   * The default time to live for cache entries, in seconds.
-   * @type {number}
-   * @static
-   * @const
-   * @private
-   */
-  static DEFAULT_CACHE_TTL = 600;
-
-  /**
-   * The default size of the cache.
-   * @type {number}
-   * @static
-   * @const
-   * @private
-   */
-  static DEFAULT_CACHE_SIZE = 250;
-
-  /**
    * Constructor.
    * @param {Object} options - The client options.
    * @param {string} options.type - The type of API this client is for.
@@ -118,6 +100,24 @@ class BaseClient {
    * @throws {TypeError} Thrown if options are not well-formed.
    */
   constructor(options) {
+    /**
+     * The default time to live for cache entries, in seconds.
+     * @type {number}
+     * @static
+     * @const
+     * @private
+     */
+    this.constructor.DEFAULT_CACHE_TTL = 600;
+
+    /**
+     * The default size of the cache.
+     * @type {number}
+     * @static
+     * @const
+     * @private
+     */
+    this.constructor.DEFAULT_CACHE_SIZE = 250;
+
     const {
       type,
       realm,
