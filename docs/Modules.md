@@ -10,14 +10,15 @@ Modules are accessed by name through their respective client instances. For inst
 ## List of Modules
 ### Common
 These are modules that are not unique to a specific client.
+
+- **[Accounts](?api=modules-common#Accounts)**
+  - Provides methods for retrieving player account data.
+
 - **[Authentication](?api=modules-common#Authentication)**
   - Provides methods for handling client access tokens.
 
 ### World of Tanks
 These are modules tied to the [World of Tanks](?api#WorldOfTanks) client.
-
-- **[Accounts](?api=modules-wot#Accounts)**
-  - Provides methods for retrieving player account data.
 
 - **[Tankopedia](?api=modules-wot#Tankopedia)**
   - Provides methods for retrieving vehicle data.
