@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
-import encyclopediaSearch from '../mixins/encyclopediaSearch';
+import { resolveEntry } from '../mixins/Encyclopedia';
 
 /**
  * @classdesc Module for the World of Warplanes Encyclopedia endpoint.
@@ -37,7 +37,7 @@ class Encyclopedia extends ClientModule {
    *   matched plane, or `null` if no planes were matched.
    */
   findPlane(identifier) {
-    return encyclopediaSearch.call(this, {
+    return resolveEntry.call(this, {
       identifier,
       indexEndpoint: 'encyclopedia/planes',
       dataEndpoint: 'encyclopedia/planeinfo',

@@ -53,6 +53,18 @@ describe('Tankopedia', function () {
     it('finds vehicle profiles by ID', function () {
       return expect(client.tankopedia.findVehicleProfile(1041, '21-1047-2066-4372')).to.eventually.have.deep.property('modules.radio_id', 1047);
     });
+
+    it('returns null when no matches are found - stock profile', function () {
+      return expect(client.tankopedia.findVehicleProfile(-1)).to.eventually.be.null;
+    });
+
+    it('returns null when no matches are found - top profile', function () {
+      return expect(client.tankopedia.findVehicleProfile(-1, 'top')).to.eventually.be.null;
+    });
+
+    it('rejects when the profile ID is invalid', function () {
+      return expect(client.tankopedia.findVehicleProfile(-1, '66-7777-8888-9999').catch(error => error)).to.eventually.be.instanceof(Error);
+    });
   });
 
   describe('#localizeCrewRole()', function () {

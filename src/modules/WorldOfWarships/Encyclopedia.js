@@ -1,7 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
-import encyclopediaSearch from '../mixins/encyclopediaSearch';
-import localize from '../mixins/localize';
+import { localize, resolveEntry } from '../mixins/Encyclopedia';
 
 /**
  * @classdesc Module for the World of Warships Encyclopedia endpoint.
@@ -38,7 +37,7 @@ class Encyclopedia extends ClientModule {
    *   matched ship, or `null` if no ships were matched.
    */
   findShip(identifier) {
-    return encyclopediaSearch.call(this, {
+    return resolveEntry.call(this, {
       identifier,
       indexEndpoint: 'encyclopedia/ships',
       dataEndpoint: 'encyclopedia/ships',

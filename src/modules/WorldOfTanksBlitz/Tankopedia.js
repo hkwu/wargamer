@@ -1,7 +1,6 @@
 import Fuse from 'fuse.js';
 import ClientModule from '../ClientModule';
-import encyclopediaSearch from '../mixins/encyclopediaSearch';
-import localize from '../mixins/localize';
+import { localize, resolveEntry } from '../mixins/Encyclopedia';
 
 /**
  * @classdesc Module for the World of Tanks Blitz Tankopedia endpoint.
@@ -39,7 +38,7 @@ class Tankopedia extends ClientModule {
    *   matched vehicle, or `null` if no vehicles were matched.
    */
   findVehicle(identifier) {
-    return encyclopediaSearch.call(this, {
+    return resolveEntry.call(this, {
       identifier,
       indexEndpoint: 'encyclopedia/vehicles',
       dataEndpoint: 'encyclopedia/vehicles',
